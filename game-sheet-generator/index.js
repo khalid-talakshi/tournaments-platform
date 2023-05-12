@@ -29,11 +29,11 @@ const matchDetails = {
   category: "M05",
   homeTeam: {
     name: "Test 1",
-    roster: createTeam(12),
+    roster: createTeam(8),
   },
   awayTeam: {
     name: "Test 2",
-    roster: createTeam(12),
+    roster: createTeam(6),
   },
 };
 
@@ -147,7 +147,7 @@ var docDefinition = {
       ],
     },
     {
-      margin: [0, 10, 0, 0],
+      margin: [0, 10, 0, 10],
       fontSize: 11,
       table: {
         headerRows: 2,
@@ -192,6 +192,84 @@ var docDefinition = {
           ...createRosterTable(matchDetails),
         ],
       },
+    },
+    {
+      margin: [0, 0, 0, 10],
+      columns: [
+        { text: "", width: "*" },
+        {
+          width: "auto",
+          stack: [
+            { text: "Score", alignment: "center" },
+            {
+              table: {
+                widths: [50, 5, 50],
+                headerRows: 0,
+                body: [["", sepCell(), ""]],
+                heights: 20,
+              },
+            },
+          ],
+        },
+        { text: "", width: "*" },
+      ],
+    },
+    {
+      columns: [
+        { text: "", width: "*" },
+        {
+          width: "auto",
+          stack: [
+            { text: "Penalty Shoot Out Score", alignment: "center" },
+            {
+              table: {
+                widths: [50, 5, 50],
+                headerRows: 0,
+                body: [["", sepCell(), ""]],
+                heights: 20,
+              },
+            },
+          ],
+        },
+        { text: "", width: "*" },
+      ],
+      margin: [0, 0, 0, 30],
+    },
+    {
+      columns: [
+        {
+          stack: [
+            {
+              text: "______________________",
+            },
+            {
+              text: "Coach Signature",
+            },
+          ],
+        },
+        {
+          stack: [
+            {
+              text: "______________________",
+            },
+            {
+              text: "Referee Signature",
+            },
+          ],
+          alignment: "center",
+        },
+        {
+          stack: [
+            {
+              text: "______________________",
+            },
+            {
+              text: "Coach Signature",
+            },
+          ],
+          alignment: "right",
+        },
+      ],
     },
   ],
   styles: {
