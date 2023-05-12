@@ -1,0 +1,14 @@
+{
+  "name": "game-sheet-generator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@faker-js/faker": "^8.0.0",
+    "pdfmake": "^0.2.7"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "type": "module"
+}
