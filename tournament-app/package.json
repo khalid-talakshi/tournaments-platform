@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@g-loot/react-tournament-brackets": "^1.0.28",
     "react": "^18.2.0",
+    "react-brackets": "^0.4.7",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
