@@ -64,16 +64,25 @@ export const participantRoutes = (app: Express) => {
           },
         });
 
-        await uploadObject(
-          `${participant.id}-headshot.${getExtension(headshot)}`,
-          headshot.buffer
-        );
-        await uploadObject(
-          `${participant.id}-photoId.${getExtension(photoId)}`,
-          photoId.buffer
-        );
+        const headshotKey = `${participant.id}-headshot.${getExtension(
+          headshot
+        )}`;
+        const photoIdKey = `${participant.id}-photoId.${getExtension(photoId)}`;
 
-        res.status(201).json(participant);
+        await uploadObject(headshotKey, headshot.buffer);
+        await uploadObject(photoIdKey, photoId.buffer);
+
+        const updatedParticipant = await prisma.participant.update({
+          where: {
+            id: participant.id,
+          },
+          data: {
+            headshotKey: headshotKey,
+            photoIdKey: photoIdKey,
+          },
+        });
+
+        res.status(201).json(updatedParticipant);
       } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
           if (
@@ -266,15 +275,15 @@ export const participantRoutes = (app: Express) => {
       const { userId } = decodeToken(authHeader);
       const participantId = req.params.id;
 
-      await deleteObject(`${participantId}-headshot`);
-      await deleteObject(`${participantId}-photoId`);
-
       const participant = await prisma.participant.delete({
         where: {
           id: parseInt(participantId),
           userId: userId,
         },
       });
+
+      await deleteObject(participant.headshotKey);
+      await deleteObject(participant.photoIdKey);
       res.json(participant);
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError) {
