@@ -1,6 +1,10 @@
 import AWS, { SESV2 } from "aws-sdk";
 import AWSMock from "mock-aws-s3";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  S3Client,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 
 AWSMock.config.basePath = "/tmp/buckets/"; // Can configure a basePath for your local buckets
 
@@ -34,3 +38,18 @@ export const uploadObject = async (key: string, buffer: any) => {
     throw new Error("uploadError");
   }
 };
+
+export const deleteObject = async (key: string) => {
+  const deleteParams = {
+    Bucket: process.env.AWS_BUCKET,
+    Key: key,
+  };
+
+  try {
+    const result = await s3Client.send(new DeleteObjectCommand(deleteParams));
+    return result;
+  } catch (err) {
+    throw new Error("deleteError");
+  }
+};
+
