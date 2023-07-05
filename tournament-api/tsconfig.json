@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "outDir": "build",
+    "baseUrl": "./",
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "allowJs": true,
+    "module": "CommonJS"
+  },
+  "include": [
+    "index.ts",
+    "prisma/**/*.ts",
+    "middleware/**/*.ts",
+    "helpers/**/*.ts",
+    "prisma/seed.ts"
+]
+}

@@ -1,1 +1,78 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level></diagram>
+<diagram program="umletino" version="15.1"><zoom_level>9</zoom_level><element><id>UMLClass</id><coordinates><x>279</x><y>171</y><w>189</w><h>135</h></coordinates><panel_attributes>Participant
+--
+id: ID
+name: String
+dob: Date
+email: String
+phoneNumber: String
+verified: Boolean
+verificationErrorReason: String
+headshotUrl: String
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>72</x><y>351</y><w>189</w><h>99</h></coordinates><panel_attributes>Player
+--
+id: ID
+participant: Participant
+jersey: Int
+team: Team
+redCards: RedCardSuspension[]
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>153</x><y>297</y><w>234</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>240;10;240;40;10;40;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>279</x><y>495</y><w>189</w><h>135</h></coordinates><panel_attributes>Team
+--
+id: ID
+name: String
+division: String
+players: Player[]
+coaches: Coach[]
+teamManager: TeamManager
+paid: Boolean
+matches: Match[]
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>144</x><y>441</y><w>243</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;250;40;250;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>279</x><y>351</y><w>189</w><h>99</h></coordinates><panel_attributes>Coach
+--
+id: ID
+participant: Participant
+certification?: String
+team: Team
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>297</y><w>27</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>441</y><w>27</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>486</x><y>351</y><w>189</w><h>99</h></coordinates><panel_attributes>TeamManager
+--
+id: ID
+participant: Participant
+team: Team
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>297</y><w>234</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;240;40;240;60</additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>441</y><w>252</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>260;10;260;40;10;40;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>279</x><y>0</y><w>189</w><h>126</h></coordinates><panel_attributes>User
+--
+id: ID
+email: String
+password: String
+participants: Participants[]
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>117</y><w>27</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>279</x><y>675</y><w>189</w><h>270</h></coordinates><panel_attributes>Match
+--
+id: ID
+venue: String
+field: Int
+startTime: Time
+duration: Int
+division: String
+gameType: String
+homeCode: String
+awayCode: String
+HomeTeam: Team
+AwayTeam: Team
+status: String
+homeTeamScore: Int
+awayTeamScore: Int
+homeMVP: Player
+awayMVP: Player
+redCards: RedCardSuspension
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>621</y><w>27</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>54</x><y>675</y><w>189</w><h>72</h></coordinates><panel_attributes>RedCardSuspension
+--
+id: ID
+player: Player
+match: Match
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>234</x><y>711</y><w>63</w><h>27</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>117</x><y>441</y><w>27</w><h>252</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;260;10;10</additional_attributes></element></diagram>
