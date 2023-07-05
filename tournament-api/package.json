@@ -4,7 +4,7 @@
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "prisma generate --schema ./prisma/schema.prisma && prisma migrate deploy && prisma db seed && nodemon --watch prisma --watch middleware --watch helpers --watch index.js --watch config ./index.js",
+    "dev": "yarn build && prisma generate --schema ./prisma/schema.prisma && prisma migrate deploy && prisma db seed && nodemon --watch prisma --watch middleware --watch helpers --watch index.js --watch config ./index.js",
     "build": "tsc",
     "start": "prisma generate --schema ./prisma/schema.prisma && prisma migrate deploy && prisma db seed && tsc && nodemon --watch prisma --watch middleware --watch helpers --watch routes --watch types --watch index.ts --watch app.ts --watch config ./index.ts",
     "test": "dotenv -e .env.test -- prisma migrate reset --force && dotenv -e .env.test -- jest --watchAll"
@@ -21,6 +21,7 @@
     "@types/multer": "^1.4.7",
     "@types/papaparse": "^5.3.5",
     "@types/supertest": "^2.0.12",
+    "@aws-sdk/client-s3": "^3.32.0",
     "aws-sdk": "^2.1213.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
