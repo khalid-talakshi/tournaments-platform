@@ -13,10 +13,10 @@ import {
   bucketParams,
   getExtension,
   uploadObject,
+  deleteObject,
 } from "../helpers";
 
 export const participantRoutes = (app: Express) => {
-  console.log(process.env);
   app.post(
     "/participant",
     upload.fields([
@@ -185,58 +185,90 @@ export const participantRoutes = (app: Express) => {
     }
   });
 
-  app.put("/participant/:id", async (req, res) => {
-    try {
-      const authHeader = req.headers.authorization;
-      const { userId } = decodeToken(authHeader);
-      const participantId = req.params.id;
-      const { name, dob, phoneNumber, email, parentEmail } = req.body;
-      const age = getAge(dob);
-      if (age < 18 && !parentEmail) {
-        throw Error("noParentEmail");
-      }
-      const participant = await prisma.participant.update({
-        where: {
-          id: parseInt(participantId),
-          userId: userId,
-        },
-        data: {
-          name,
-          dob,
-          phoneNumber,
-          email,
-          parentEmail,
-        },
-      });
-      res.json(participant);
-    } catch (e) {
-      if (e.message === "noParentEmail") {
-        const error: UserError = {
-          code: ErrorCode.PARTICIPANT_MISSING_PARENT_EMAIL,
-          message: "You are under 18, please provide a parent email",
-        };
-        res.status(401).json(error);
-      } else if (e instanceof PrismaClientKnownRequestError) {
-        if (e.code === "P2025") {
+  app.put(
+    "/participant/:id",
+    upload.fields([
+      { name: "headshot", maxCount: 1 },
+      { name: "photoId", maxCount: 1 },
+    ]),
+    async (req, res) => {
+      try {
+        const authHeader = req.headers.authorization;
+        const { userId } = decodeToken(authHeader);
+        const participantId = req.params.id;
+        const { name, dob, phoneNumber, email, parentEmail } = req.body;
+        const age = getAge(dob);
+        if (age < 18 && parentEmail != null && parentEmail.length === 0) {
+          throw Error("noParentEmail");
+        }
+
+        console.log("req.files", req.files);
+
+        const headshot = req.files["headshot"]?.[0];
+        const photoId = req.files["photoId"]?.[0];
+
+        if (headshot) {
+          console.log("headshot", headshot);
+          await uploadObject(
+            `${participantId}-headshot.${getExtension(headshot)}`,
+            headshot.buffer
+          );
+        }
+
+        if (photoId) {
+          await uploadObject(
+            `${participantId}-photoId.${getExtension(photoId)}`,
+            photoId.buffer
+          );
+        }
+
+        const participant = await prisma.participant.update({
+          where: {
+            id: parseInt(participantId),
+            userId: userId,
+          },
+          data: {
+            name,
+            dob,
+            phoneNumber,
+            email,
+            parentEmail,
+          },
+        });
+        res.json(participant);
+      } catch (e) {
+        if (e.message === "noParentEmail") {
           const error: UserError = {
-            code: ErrorCode.PARTICIPANT_NOT_FOUND,
-            message: "Participant not found for user",
+            code: ErrorCode.PARTICIPANT_MISSING_PARENT_EMAIL,
+            message: "You are under 18, please provide a parent email",
           };
           res.status(401).json(error);
-          return;
+        } else if (e instanceof PrismaClientKnownRequestError) {
+          if (e.code === "P2025") {
+            const error: UserError = {
+              code: ErrorCode.PARTICIPANT_NOT_FOUND,
+              message: "Participant not found for user",
+            };
+            res.status(401).json(error);
+            return;
+          }
+        } else {
+          console.log(e);
+          res.status(401).json({ error: e.message });
         }
-      } else {
-        console.log(e);
-        res.status(401).json({ error: e.message });
       }
     }
-  });
+  );
 
   app.delete("/participant/:id", async (req, res) => {
     try {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader);
       const participantId = req.params.id;
+
+      await deleteObject(`${participantId}-headshot`);
+      await deleteObject(`${participantId}-photoId`);
+
       const participant = await prisma.participant.delete({
         where: {
           id: parseInt(participantId),
