@@ -127,82 +127,82 @@ app.get("/match/:matchId/team/:teamId", async (req, res) => {
   }
 });
 
-app.post("/check-in", async (req: any, res) => {
-  try {
-    const participantId = parseInt(req.query.participantId);
-    const matchId = parseInt(req.query.matchId);
-    const teamId = parseInt(req.query.teamId);
-    const checkInStatus = req.query.status;
+// app.post("/check-in", async (req: any, res) => {
+//   try {
+//     const participantId = parseInt(req.query.participantId);
+//     const matchId = parseInt(req.query.matchId);
+//     const teamId = parseInt(req.query.teamId);
+//     const checkInStatus = req.query.status;
 
-    // check if match has team involved
-    const match = await prisma.match.findUnique({
-      where: {
-        id: matchId,
-      },
-      include: {
-        HomeTeam: true,
-        AwayTeam: true,
-      },
-    });
-    if (match.homeTeamId !== teamId && match.awayTeamId !== teamId) {
-      res.status(401).json({
-        error: `match id ${matchId} doesn't have team id ${teamId} involved in it.`,
-      });
-      return;
-    }
+//     // check if match has team involved
+//     const match = await prisma.match.findUnique({
+//       where: {
+//         id: matchId,
+//       },
+//       include: {
+//         HomeTeam: true,
+//         AwayTeam: true,
+//       },
+//     });
+//     if (match.homeTeamId !== teamId && match.awayTeamId !== teamId) {
+//       res.status(401).json({
+//         error: `match id ${matchId} doesn't have team id ${teamId} involved in it.`,
+//       });
+//       return;
+//     }
 
-    // check if player is on team
-    const players = await prisma.player.findMany({
-      where: {
-        participantId: participantId,
-        TeamId: teamId,
-      },
-      include: {
-        Team: true,
-      },
-    });
+//     // check if player is on team
+//     const players = await prisma.player.findMany({
+//       where: {
+//         participantId: participantId,
+//         TeamId: teamId,
+//       },
+//       include: {
+//         Team: true,
+//       },
+//     });
 
-    if (players.length === 0) {
-      res.status(401).json({
-        error: `participant id ${participantId} doesn't belong to team id ${teamId}`,
-      });
-      return;
-    }
+//     if (players.length === 0) {
+//       res.status(401).json({
+//         error: `participant id ${participantId} doesn't belong to team id ${teamId}`,
+//       });
+//       return;
+//     }
 
-    const checkInRecord = await prisma.checkIn.upsert({
-      where: {
-        match_participant_team: {
-          participantId: participantId,
-          matchId: matchId,
-          teamId: teamId,
-        },
-      },
-      update: {
-        status: checkInStatus,
-      },
-      create: {
-        participantId: participantId,
-        matchId: matchId,
-        teamId: teamId,
-        status: checkInStatus,
-      },
-    });
+//     const checkInRecord = await prisma.checkIn.upsert({
+//       where: {
+//         match_participant_team: {
+//           participantId: participantId,
+//           matchId: matchId,
+//           teamId: teamId,
+//         },
+//       },
+//       update: {
+//         status: checkInStatus,
+//       },
+//       create: {
+//         participantId: participantId,
+//         matchId: matchId,
+//         teamId: teamId,
+//         status: checkInStatus,
+//       },
+//     });
 
-    const created = checkInRecord.createdAt === checkInRecord.updatedAt;
-    if (created) {
-      res.status(201).json(checkInRecord);
-      return;
-    } else {
-      res.status(200).json(checkInRecord);
-      return;
-    }
-  } catch (e) {
-    console.log(e);
-    res.status(401).json({
-      error: e.message,
-    });
-  }
-});
+//     const created = checkInRecord.createdAt === checkInRecord.updatedAt;
+//     if (created) {
+//       res.status(201).json(checkInRecord);
+//       return;
+//     } else {
+//       res.status(200).json(checkInRecord);
+//       return;
+//     }
+//   } catch (e) {
+//     console.log(e);
+//     res.status(401).json({
+//       error: e.message,
+//     });
+//   }
+// });
 
 app.get("/player/:id", async (req, res) => {
   try {
@@ -242,27 +242,27 @@ app.get("/coach/:id", async (req, res) => {
   }
 });
 
-app.get("/check-in", async (req: any, res) => {
-  try {
-    const participantId = parseInt(req.query.participantId);
-    const matchId = parseInt(req.query.matchId);
-    const teamId = parseInt(req.query.teamId);
+// app.get("/check-in", async (req: any, res) => {
+//   try {
+//     const participantId = parseInt(req.query.participantId);
+//     const matchId = parseInt(req.query.matchId);
+//     const teamId = parseInt(req.query.teamId);
 
-    const checkInData = await prisma.checkIn.findUnique({
-      where: {
-        match_participant_team: {
-          participantId: participantId,
-          matchId: matchId,
-          teamId: teamId,
-        },
-      },
-    });
-    res.status(200).json(checkInData);
-  } catch (e) {
-    console.log(e);
-    res.status(401).json({ error: e.message });
-  }
-});
+//     const checkInData = await prisma.checkIn.findUnique({
+//       where: {
+//         match_participant_team: {
+//           participantId: participantId,
+//           matchId: matchId,
+//           teamId: teamId,
+//         },
+//       },
+//     });
+//     res.status(200).json(checkInData);
+//   } catch (e) {
+//     console.log(e);
+//     res.status(401).json({ error: e.message });
+//   }
+// });
 
 app.get("/participant/:id/players", async (req, res) => {
   try {
@@ -336,39 +336,39 @@ app.get("/participant/:id/matches", async (req: any, res) => {
   }
 });
 
-app.post("/red-card", async (req, res) => {
-  try {
-    const { participantId, matchId } = req.body;
-    const participant = parseInt(participantId);
-    const match = parseInt(matchId);
-    const matches = await getAllMatches(participant, match);
-    const nextMatch = matches[0];
-    const teamId = nextMatch.teamId;
-    const checkInStatus = "ban";
-    const checkInRecord = await prisma.checkIn.upsert({
-      where: {
-        match_participant_team: {
-          participantId: participant,
-          matchId: nextMatch.id,
-          teamId: teamId,
-        },
-      },
-      update: {
-        status: checkInStatus,
-      },
-      create: {
-        status: checkInStatus,
-        matchId: nextMatch.id,
-        participantId: participant,
-        teamId: teamId,
-      },
-    });
-    res.status(200).json(checkInRecord);
-  } catch (e) {
-    console.log(e);
-    res.status(401).json({ error: e.message });
-  }
-});
+// app.post("/red-card", async (req, res) => {
+//   try {
+//     const { participantId, matchId } = req.body;
+//     const participant = parseInt(participantId);
+//     const match = parseInt(matchId);
+//     const matches = await getAllMatches(participant, match);
+//     const nextMatch = matches[0];
+//     const teamId = nextMatch.teamId;
+//     const checkInStatus = "ban";
+//     const checkInRecord = await prisma.checkIn.upsert({
+//       where: {
+//         match_participant_team: {
+//           participantId: participant,
+//           matchId: nextMatch.id,
+//           teamId: teamId,
+//         },
+//       },
+//       update: {
+//         status: checkInStatus,
+//       },
+//       create: {
+//         status: checkInStatus,
+//         matchId: nextMatch.id,
+//         participantId: participant,
+//         teamId: teamId,
+//       },
+//     });
+//     res.status(200).json(checkInRecord);
+//   } catch (e) {
+//     console.log(e);
+//     res.status(401).json({ error: e.message });
+//   }
+// });
 
 app.post("/parse-schedule", upload.single("data"), async (req, res) => {
   try {
