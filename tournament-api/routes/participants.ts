@@ -36,7 +36,6 @@ export const participantRoutes = (app: Express) => {
         if (phoneNumber === "") {
           throw Error("noPhoneNumber");
         }
-        console.log(emailRegex.test(email));
         if (emailRegex.test(email) === false) {
           throw Error("invalidEmail");
         }
