@@ -2,15 +2,13 @@ import { Express } from "express";
 import { prisma } from "../prisma";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { ErrorCode, UserError } from "../types";
-import { decodeToken, getExtension } from "../helpers";
 import {
-  s3,
-  bucketParams,
+  decodeToken,
+  getExtension,
   uploadObject,
   upload,
   deleteObject,
 } from "../helpers";
-import { TeamManager } from "@prisma/client";
 
 export const teamManagerRoutes = (app: Express) => {
   app.post("/team-manager", upload.single("headshot"), async (req, res) => {
@@ -40,7 +38,16 @@ export const teamManagerRoutes = (app: Express) => {
       const extension = getExtension(headshot);
       const key = `${tm.id}-tm-headshot.${extension}`;
       await uploadObject(key, headshot.buffer);
-      res.status(201).send(tm);
+
+      const updatedTM = await prisma.teamManager.update({
+        where: {
+          id: tm.id,
+        },
+        data: {
+          headshot: key,
+        },
+      });
+      res.status(201).send(updatedTM);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === "P2002") {
@@ -112,6 +119,7 @@ export const teamManagerRoutes = (app: Express) => {
         dataToUpdate["dob"] = new Date(dob);
       }
       if (headshot) {
+        console.log("uplaoding new headshot");
         const extension = getExtension(headshot);
         const key = `${userId}-tm-headshot.${extension}`;
         await uploadObject(key, headshot.buffer);
@@ -123,6 +131,8 @@ export const teamManagerRoutes = (app: Express) => {
         },
         data: dataToUpdate,
       });
+
+      res.json(tm);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === "P2025") {
@@ -157,13 +167,13 @@ export const teamManagerRoutes = (app: Express) => {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader);
 
-      await deleteObject(`${userId}-tm-headshot`);
-
       const tm = await prisma.teamManager.delete({
         where: {
           userId,
         },
       });
+
+      await deleteObject(tm.headshot);
 
       res.status(200).send(tm);
     } catch (error) {
