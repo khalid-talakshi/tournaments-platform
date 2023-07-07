@@ -4,7 +4,7 @@
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "yarn build && prisma generate --schema ./prisma/schema.prisma && prisma migrate deploy && prisma db seed && nodemon --watch prisma --watch middleware --watch helpers --watch index.js --watch config ./index.js",
+    "dev": "yarn build && prisma generate --schema ./prisma/schema.prisma && prisma migrate deploy && prisma db seed && nodemon --watch prisma --watch middleware --watch helpers --watch index.js --watch config ./index.js --watch routes",
     "build": "tsc",
     "start": "prisma generate --schema ./prisma/schema.prisma && prisma migrate deploy && prisma db seed && tsc && nodemon --watch prisma --watch middleware --watch helpers --watch routes --watch types --watch index.ts --watch app.ts --watch config ./index.ts",
     "test": "dotenv -e .env.test -- prisma migrate reset --force && dotenv -e .env.test -- jest --watchAll"

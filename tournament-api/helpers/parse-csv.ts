@@ -107,7 +107,7 @@ export const parseCsv = async (csv) => {
         await prisma.player.create({
           data: {
             participantId: participant.id,
-            TeamId: team.id,
+            teamId: team.id,
             number: jerseyNumber || null,
             regNumber: regNumber || null,
           },

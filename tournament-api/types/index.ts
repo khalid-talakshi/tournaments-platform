@@ -23,6 +23,7 @@ export enum ErrorCode {
   USER_ALREADY_EXISTS,
   AWS_S3_UPLOAD_ERROR,
   TEAM_HAS_PLAYERS,
+  INVALID_PLAYER_ID,
 }
 
 export enum TeamCategory {
