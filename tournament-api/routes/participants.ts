@@ -25,7 +25,7 @@ export const participantRoutes = (app: Express) => {
     ]),
     async (req, res) => {
       try {
-        const { name, dob, phoneNumber, email, parentEmail } = req.body;
+        const { name, dob, phoneNumber, email, parentEmail, gender } = req.body;
         const headshot = req.files["headshot"][0];
         const photoId = req.files["photoId"][0];
         const authHeader = req.headers.authorization;
@@ -57,6 +57,7 @@ export const participantRoutes = (app: Express) => {
             phoneNumber,
             email,
             parentEmail,
+            gender,
           },
           include: {
             User: true,
