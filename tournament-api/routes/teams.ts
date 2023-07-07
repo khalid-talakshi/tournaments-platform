@@ -28,12 +28,24 @@ export const teamsRoutes = (app: Express) => {
         password || `${teamName}-${category}`,
         10
       );
+      const categoryEntry = await prisma.category.findFirst({
+        where: {
+          name: category,
+        },
+      });
+
+      if (!category) {
+        throw new Error("invalidCategory");
+      }
       const team = await prisma.team.create({
         data: {
           teamName: teamName,
-          category,
+          categoryId: category!.id,
           teamManagerId: teamManager!.id,
           password: hashedPassword,
+        },
+        include: {
+          Category: true,
         },
       });
       res.status(201).json(team);
@@ -71,6 +83,7 @@ export const teamsRoutes = (app: Express) => {
     try {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader!);
+      const { includeCategory } = req.query;
       const teamManager = await prisma.teamManager.findUnique({
         where: {
           userId,
@@ -82,6 +95,9 @@ export const teamsRoutes = (app: Express) => {
       const teams = await prisma.team.findMany({
         where: {
           teamManagerId: teamManager!.id,
+        },
+        include: {
+          Category: includeCategory === "true",
         },
       });
       res.status(200).json(teams);

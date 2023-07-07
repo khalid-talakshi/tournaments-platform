@@ -53,8 +53,8 @@ model Participant {
   phoneNumber String   @db.VarChar(255)
   email       String   @db.VarChar(255)
   parentEmail String?  @db.VarChar(255)
-  headshotKey    String?  @db.VarChar(255)
-  photoIdKey     String?  @db.VarChar(255)
+  headshotKey String?  @db.VarChar(255)
+  photoIdKey  String?  @db.VarChar(255)
   User        User     @relation(fields: [userId], references: [id], map: "user_relation")
   Coaches     Coach[]
   Players     Player[]
@@ -68,15 +68,15 @@ model Player {
   number        Int?        @default(0)
   createdAt     DateTime    @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime    @updatedAt @db.Timestamptz(0)
-  TeamId        Int?
+  teamId        Int?
   regNumber     Int?
   participantId Int
-  Team          Team?       @relation(fields: [TeamId], references: [id], map: "Players_ibfk_1")
+  Team          Team?       @relation(fields: [teamId], references: [id], map: "Players_ibfk_1")
   Participant   Participant @relation(fields: [participantId], references: [id], map: "Players_ibfk_2")
 
-  @@unique([participantId, TeamId], name: "ParticipantId_TeamId")
+  @@unique([participantId, teamId], name: "ParticipantId_TeamId")
   @@index([participantId], map: "participantId")
-  @@index([TeamId], map: "TeamId")
+  @@index([teamId], map: "TeamId")
 }
 
 model Team {
@@ -84,7 +84,7 @@ model Team {
   teamName      String?      @db.VarChar(255)
   createdAt     DateTime     @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
-  category      String?      @db.VarChar(255)
+  categoryId    Int?
   password      String?      @db.VarChar(255)
   teamManagerId Int?
   teamManager   TeamManager? @relation("Teams_teamManagerIdToParticipants", fields: [teamManagerId], references: [id], map: "Teams_ibfk_1")
@@ -92,8 +92,9 @@ model Team {
   HomeMatches   Match[]      @relation("Matches_homeTeamIdToTeams")
   AwayMatches   Match[]      @relation("Matches_awayTeamIdToTeams")
   Players       Player[]
+  Category      Category?    @relation(fields: [categoryId], references: [id], map: "category_relation")
 
-  @@unique([category, teamName], name: "category_teamName")
+  @@unique([categoryId, teamName], name: "category_teamName")
   @@index([teamManagerId], map: "teamManagerId")
 }
 
@@ -117,4 +118,15 @@ model User {
   permission  String?       @db.VarChar(255)
   Participant Participant[]
   TeamManager TeamManager?
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
+  minAge    Int?
+  maxAge    Int?
+  female    Boolean? @default(false)
+  Team      Team[]
 }
