@@ -12,7 +12,6 @@ export const teamsRoutes = (app: Express) => {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader!);
       const { teamName, category, password } = req.body;
-      let hashedPassword;
       const teamManager = await prisma.teamManager.findUnique({
         where: {
           userId,
@@ -25,7 +24,7 @@ export const teamsRoutes = (app: Express) => {
       } else if (!category) {
         throw new Error("invalidCategory");
       }
-      hashedPassword = await bcrypt.hash(
+      const hashedPassword = await bcrypt.hash(
         password || `${teamName}-${category}`,
         10
       );
@@ -125,12 +124,13 @@ export const teamsRoutes = (app: Express) => {
       if (e.message === "noTeamManager") {
         res.status(401).json({
           code: ErrorCode.NO_TEAM_MANAGER,
-          message: "User has no TeamManager",
+          message: "User has no Team Manager",
         } as UserError);
       } else if (e.message === "noTeam") {
         res.status(404).json({
           code: ErrorCode.TEAM_NOT_FOUND,
-          message: "Team not found",
+          message:
+            "Team not found. It is possible you don't own this team or it doesn't exist",
         } as UserError);
       } else {
         console.log(e);
@@ -209,7 +209,7 @@ export const teamsRoutes = (app: Express) => {
       } else if (e.message === "teamHasPlayers") {
         res.status(400).json({
           code: ErrorCode.TEAM_HAS_PLAYERS,
-          message: "Team has players, cannot change category",
+          message: "This team has players, you cannot change the category.",
         } as UserError);
       } else {
         console.log(e);
