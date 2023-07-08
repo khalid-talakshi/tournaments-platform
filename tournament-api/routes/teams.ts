@@ -280,4 +280,20 @@ export const teamsRoutes = (app: Express) => {
       }
     }
   });
+
+  app.get("/teams/category/:category", async (req, res) => {
+    try {
+      const teams = await prisma.team.findMany({
+        where: {
+          Category: {
+            name: req.params.category,
+          },
+        },
+      });
+      res.status(200).json(teams);
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({ error: e.message });
+    }
+  });
 };

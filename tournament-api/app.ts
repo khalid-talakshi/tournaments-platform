@@ -14,6 +14,7 @@ import {
   teamManagerRoutes,
   teamsRoutes,
   playersRoutes,
+  categoryRoutes,
 } from "./routes";
 
 dotenv.config();
@@ -323,6 +324,7 @@ participantRoutes(app);
 teamManagerRoutes(app);
 teamsRoutes(app);
 playersRoutes(app);
+categoryRoutes(app);
 
 app.get("/participant/:id/matches", async (req: any, res) => {
   try {
@@ -392,7 +394,9 @@ app.get("/teams/:category", async (req, res) => {
     const category = req.params.category;
     const teams = await prisma.team.findMany({
       where: {
-        category: category,
+        Category: {
+          name: category,
+        },
       },
       select: {
         id: true,
