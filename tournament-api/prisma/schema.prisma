@@ -69,7 +69,7 @@ model Player {
   createdAt     DateTime    @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime    @updatedAt @db.Timestamptz(0)
   teamId        Int?
-  jerseyNumber  Int        @default(0)
+  jerseyNumber  Int         @default(0)
   participantId Int
   Team          Team?       @relation(fields: [teamId], references: [id], map: "Players_ibfk_1")
   Participant   Participant @relation(fields: [participantId], references: [id], map: "Players_ibfk_2")
@@ -122,11 +122,11 @@ model User {
 
 model Category {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now()) @db.Timestamptz(0)
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
   minAge    Int?
   maxAge    Int?
   female    Boolean? @default(false)
-  Team      Team[]
+  Teams      Team[]
 }
