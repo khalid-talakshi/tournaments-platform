@@ -2,9 +2,8 @@ import { Express } from "express";
 import { prisma } from "../prisma";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { ErrorCode } from "../types";
-import { decodeToken } from "../helpers";
 import { UserError } from "aws-sdk/clients/chime";
-import bcrypt from "bcryptjs";
+import { authenticateAdmin } from "../middleware";
 
 export const categoryRoutes = (app: Express) => {
   app.get("/categories", async (req, res) => {
@@ -27,7 +26,7 @@ export const categoryRoutes = (app: Express) => {
     }
   });
 
-  app.post("/categories", async (req, res) => {
+  app.post("/categories", authenticateAdmin, async (req, res) => {
     const { name, minAge, maxAge, female } = req.body;
 
     try {
@@ -85,7 +84,7 @@ export const categoryRoutes = (app: Express) => {
     }
   });
 
-  app.delete("/categories/:id", async (req, res) => {
+  app.delete("/categories/:id", authenticateAdmin, async (req, res) => {
     const { id } = req.params;
 
     try {
