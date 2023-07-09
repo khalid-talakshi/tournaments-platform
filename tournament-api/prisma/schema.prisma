@@ -85,7 +85,7 @@ model Team {
   createdAt     DateTime     @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
   categoryId    Int?
-  password      String?      @db.VarChar(255)
+  password      String      @db.VarChar(255)
   teamManagerId Int?
   teamManager   TeamManager? @relation("Teams_teamManagerIdToParticipants", fields: [teamManagerId], references: [id], map: "Teams_ibfk_1")
   Coaches       Coach[]
