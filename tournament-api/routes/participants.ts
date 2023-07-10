@@ -301,4 +301,40 @@ export const participantRoutes = (app: Express) => {
       }
     }
   });
+
+  app.get("/participant/:id/players", async (req, res) => {
+    try {
+      const participantId = parseInt(req.params.id);
+      const players = await prisma.participant.findUnique({
+        where: {
+          id: participantId,
+        },
+        select: {
+          Players: true,
+        },
+      });
+      res.status(200).json(players.Players);
+    } catch (e) {
+      console.log(e);
+      res.status(401).json({ error: e.message });
+    }
+  });
+
+  app.get("/participant/:id/coaches", async (req, res) => {
+    try {
+      const participantId = parseInt(req.params.id);
+      const coaches = await prisma.participant.findUnique({
+        where: {
+          id: participantId,
+        },
+        select: {
+          Coaches: true,
+        },
+      });
+      res.status(200).json(coaches.Coaches);
+    } catch (e) {
+      console.log(e);
+      res.status(401).json({ error: e.message });
+    }
+  });
 };

@@ -1,4 +1,3 @@
-import AWS, { SESV2 } from "aws-sdk";
 import AWSMock from "mock-aws-s3";
 import {
   PutObjectCommand,
@@ -52,4 +51,3 @@ export const deleteObject = async (key: string) => {
     throw new Error("deleteError");
   }
 };
-
