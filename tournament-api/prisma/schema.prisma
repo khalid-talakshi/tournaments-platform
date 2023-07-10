@@ -15,7 +15,6 @@ model Coach {
   createdAt     DateTime     @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
   TeamId        Int?
-  regNumber     Int?
   participantId Int?
   Team          Team?        @relation(fields: [TeamId], references: [id], map: "Coaches_ibfk_1")
   Participant   Participant? @relation(fields: [participantId], references: [id], map: "Coaches_ibfk_2")

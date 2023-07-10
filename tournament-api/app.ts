@@ -15,6 +15,7 @@ import {
   teamsRoutes,
   playersRoutes,
   categoryRoutes,
+  coachesRoutes,
 } from "./routes";
 
 dotenv.config();
@@ -224,25 +225,6 @@ app.get("/player/:id", async (req, res) => {
   }
 });
 
-app.get("/coach/:id", async (req, res) => {
-  try {
-    const coachId = req.params.id;
-    const includeParticipant = req.query.includeParticipant;
-    const coach = await prisma.coach.findUnique({
-      where: {
-        id: parseInt(coachId),
-      },
-      include: {
-        Participant: includeParticipant === "true",
-      },
-    });
-    res.json(coach);
-  } catch (e) {
-    console.log(e);
-    res.status(401).json({ error: e.message });
-  }
-});
-
 // app.get("/check-in", async (req: any, res) => {
 //   try {
 //     const participantId = parseInt(req.query.participantId);
@@ -325,6 +307,7 @@ teamManagerRoutes(app);
 teamsRoutes(app);
 playersRoutes(app);
 categoryRoutes(app);
+coachesRoutes(app);
 
 app.get("/participant/:id/matches", async (req: any, res) => {
   try {
