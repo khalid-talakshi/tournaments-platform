@@ -163,10 +163,14 @@ export const participantRoutes = (app: Express) => {
 
   app.get("/participants", async (req, res) => {
     const authHeader = req.headers.authorization;
+    const { includeVerification } = req.query;
     const { userId } = decodeToken(authHeader);
     const participants = await prisma.participant.findMany({
       where: {
         userId,
+      },
+      include: {
+        Verification: includeVerification === "true",
       },
     });
     res.status(200).json(participants);
