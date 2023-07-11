@@ -139,6 +139,28 @@ export interface TeamPayload {
 
 export interface Participant {
   id: number;
+  name: string;
+  dob: string;
+  email: string;
+  parentEmail: string;
+  phoneNumber: string;
+  userId: number;
+  gender: string;
+  createdAt: string;
+  updatedAt: string;
+  headshotKey: string;
+  photoIdKey: string;
+  User?: User;
+  Verification?: Verification;
+}
+
+export interface Verification {
+  id: number;
+  participantId: number;
+  status: string;
+  reason: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 

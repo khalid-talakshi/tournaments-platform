@@ -5,9 +5,10 @@ export interface Props {
   imageKey?: string;
   token: string;
   headshot?: string;
+  cardImage?: boolean;
 }
 
-export const S3Image = ({ imageKey, token, headshot }: Props) => {
+export const S3Image = ({ imageKey, token, headshot, cardImage }: Props) => {
   const { data } = useQuery(["image", token, imageKey], getImage);
   if (headshot) {
     return (
@@ -19,6 +20,11 @@ export const S3Image = ({ imageKey, token, headshot }: Props) => {
     );
   }
   return (
-    <img src={data} style={{ width: "100%", height: "auto" }} alt={imageKey} />
+    <img
+      src={data}
+      style={{ width: "100%", height: "auto" }}
+      alt={imageKey}
+      className={cardImage ? "card-img-top" : ""}
+    />
   );
 };

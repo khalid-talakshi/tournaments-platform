@@ -2,18 +2,35 @@ import { useQuery } from "@tanstack/react-query";
 import { getParticipants } from "../../api";
 import { useCookie } from "../../hooks";
 import { Participant, UserError, isUserError } from "../../types";
+import { ParticipantCard } from "..";
 
 export const ParticipantTab = () => {
   const { cookie } = useCookie("token");
   const { data } = useQuery(["participants", cookie], getParticipants);
 
-  console.log(data);
+  const chunk = (data: any[]) => {
+    const chunked = [];
+    for (let i = 0; i < data.length; i += 3) {
+      chunked.push(data.slice(i, i + 3));
+    }
+    return chunked;
+  };
 
   const renderBody = (data?: Participant[] | UserError) => {
     if (isUserError(data)) {
       return <p>{data.message}</p>;
     } else if (data && data.length > 0) {
-      return <p>You have participants</p>;
+      const participantRows = chunk(data);
+      const participantCards = participantRows.map((row, index) => (
+        <div className="row mt-2" key={index}>
+          {row.map((participant: Participant) => (
+            <div className="col-md-4 mt-sm-2">
+              <ParticipantCard participant={participant} key={participant.id} />
+            </div>
+          ))}
+        </div>
+      ));
+      return participantCards;
     } else {
       return <p>You currently have no registered participants</p>;
     }

@@ -8,7 +8,7 @@ export const getParticipants = async (
   try {
     const [_key, token] = context.queryKey;
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/participants`,
+      `${import.meta.env.VITE_API_URL}/participants?includeVerification=true`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
