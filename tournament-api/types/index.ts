@@ -33,17 +33,11 @@ export enum ErrorCode {
   CATEGORY_DUPLICATE_NAME,
 }
 
-export enum TeamCategory {
-  B05 = "B05",
-  B08 = "B08",
-  G05 = "G05",
-  M01 = "M01",
-  M02 = "M02",
-  M75 = "M75",
-  M87 = "M87",
-  W04 = "W04",
+export enum VerificationStatus {
+  VERIFIED = "VERIFIED",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED",
 }
-
 export interface UserError {
   message: string;
   code: ErrorCode;

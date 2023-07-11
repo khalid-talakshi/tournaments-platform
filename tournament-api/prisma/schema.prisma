@@ -43,21 +43,23 @@ model Match {
 }
 
 model Participant {
-  id          Int      @id @default(autoincrement())
-  name        String   @db.VarChar(255)
-  dob         DateTime @db.Date
-  createdAt   DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt   DateTime @updatedAt @db.Timestamptz(0)
-  userId      Int      @db.Integer
-  phoneNumber String   @db.VarChar(255)
-  email       String   @db.VarChar(255)
-  parentEmail String?  @db.VarChar(255)
-  headshotKey String?  @db.VarChar(255)
-  photoIdKey  String?  @db.VarChar(255)
-  gender      String   @db.VarChar(255)
-  User        User     @relation(fields: [userId], references: [id], map: "user_relation")
-  Coaches     Coach[]
-  Players     Player[]
+  id             Int          @id @default(autoincrement())
+  name           String       @db.VarChar(255)
+  dob            DateTime     @db.Date
+  createdAt      DateTime     @default(now()) @db.Timestamptz(0)
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(0)
+  userId         Int          @db.Integer
+  phoneNumber    String       @db.VarChar(255)
+  email          String       @db.VarChar(255)
+  parentEmail    String?      @db.VarChar(255)
+  headshotKey    String?      @db.VarChar(255)
+  photoIdKey     String?      @db.VarChar(255)
+  gender         String       @db.VarChar(255)
+  verificationId Int?         @db.Integer
+  User           User         @relation(fields: [userId], references: [id], map: "user_relation")
+  Coaches        Coach[]
+  Players        Player[]
+  Verification   Verification?
 
   @@unique([name, userId], name: "userId_name")
   @@index([userId], map: "Participant_userId_fkey")
@@ -84,7 +86,7 @@ model Team {
   createdAt     DateTime     @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
   categoryId    Int?
-  password      String      @db.VarChar(255)
+  password      String       @db.VarChar(255)
   teamManagerId Int?
   teamManager   TeamManager? @relation("Teams_teamManagerIdToParticipants", fields: [teamManagerId], references: [id], map: "Teams_ibfk_1")
   Coaches       Coach[]
@@ -127,5 +129,15 @@ model Category {
   minAge    Int?
   maxAge    Int?
   female    Boolean? @default(false)
-  Teams      Team[]
+  Teams     Team[]
+}
+
+model Verification {
+  id            Int           @id @default(autoincrement())
+  createdAt     DateTime      @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime      @updatedAt @db.Timestamptz(0)
+  status        String
+  participantId Int @unique
+  reason        String?
+  Participant   Participant   @relation(fields: [participantId], references: [id], map: "Participant_verificationId_fkey")
 }

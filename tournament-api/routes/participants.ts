@@ -4,17 +4,16 @@ import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
 } from "@prisma/client/runtime";
-import { emailRegex, ErrorCode, UserError } from "../types";
+import { emailRegex, ErrorCode, UserError, VerificationStatus } from "../types";
 import {
   decodeToken,
   getAge,
   upload,
-  s3,
-  bucketParams,
   getExtension,
   uploadObject,
   deleteObject,
 } from "../helpers";
+import { authenticateAdmin } from "../middleware";
 
 export const participantRoutes = (app: Express) => {
   app.post(
@@ -72,6 +71,13 @@ export const participantRoutes = (app: Express) => {
         await uploadObject(headshotKey, headshot.buffer);
         await uploadObject(photoIdKey, photoId.buffer);
 
+        const verificationEntry = await prisma.verification.create({
+          data: {
+            participantId: participant.id,
+            status: VerificationStatus.PENDING,
+          },
+        });
+
         const updatedParticipant = await prisma.participant.update({
           where: {
             id: participant.id,
@@ -79,6 +85,7 @@ export const participantRoutes = (app: Express) => {
           data: {
             headshotKey: headshotKey,
             photoIdKey: photoIdKey,
+            verificationId: verificationEntry.id,
           },
         });
 
@@ -336,5 +343,23 @@ export const participantRoutes = (app: Express) => {
       console.log(e);
       res.status(401).json({ error: e.message });
     }
+  });
+
+  app.put("/participant/:id/verify", authenticateAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status, reason } = req.body;
+      const participantId = parseInt(id);
+      const verification = await prisma.verification.update({
+        where: {
+          participantId,
+        },
+        data: {
+          status,
+          reason,
+        },
+      });
+      res.status(200).json(verification);
+    } catch (e) {}
   });
 };
