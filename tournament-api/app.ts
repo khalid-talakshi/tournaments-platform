@@ -1,9 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import fs from "fs";
-import { prisma } from "./prisma";
-import { parseSchedule, parseCsv, getAllMatches, upload } from "./helpers";
 import { authenticate } from "./middleware/authentication";
 import {
   loginRoutes,
@@ -33,111 +30,77 @@ playersRoutes(app);
 categoryRoutes(app);
 coachesRoutes(app);
 
-app.get("/match/:id", async (req, res) => {
-  try {
-    const matchId = req.params.id;
-    const match = await prisma.match.findUnique({
-      where: {
-        id: parseInt(matchId),
-      },
-      include: {
-        HomeTeam: true,
-        AwayTeam: true,
-      },
-    });
-    res.status(200).json(match);
-  } catch (e) {
-    res.status(401).json({ error: e.message });
-  }
-});
+// app.get("/match/:id", async (req, res) => {
+//   try {
+//     const matchId = req.params.id;
+//     const match = await prisma.match.findUnique({
+//       where: {
+//         id: parseInt(matchId),
+//       },
+//       include: {
+//         HomeTeam: true,
+//         AwayTeam: true,
+//       },
+//     });
+//     res.status(200).json(match);
+//   } catch (e) {
+//     res.status(401).json({ error: e.message });
+//   }
+// });
 
-app.get("/match/:matchId/team/:teamId", async (req, res) => {
-  try {
-    const matchId = req.params.matchId;
-    const teamId = parseInt(req.params.teamId);
-    const match = await prisma.match.findUnique({
-      where: {
-        id: parseInt(matchId),
-      },
-      include: {
-        HomeTeam: true,
-        AwayTeam: true,
-      },
-    });
-    if (match.HomeTeam.id !== teamId && match.AwayTeam.id !== teamId) {
-      res.status(401).json({
-        error: `Team id ${teamId} does not belong to any team in match ${matchId}`,
-      });
-      return;
-    }
-    const team = await prisma.team.findUnique({
-      where: {
-        id: teamId,
-      },
-      include: {
-        Players: {
-          include: {
-            Participant: true,
-          },
-        },
-        Coaches: {
-          include: {
-            Participant: true,
-          },
-        },
-      },
-    });
-    res.status(200).json(team);
-  } catch (e) {
-    console.log(e);
-    res.status(401).json({ error: e.message });
-  }
-});
+// app.get("/match/:matchId/team/:teamId", async (req, res) => {
+//   try {
+//     const matchId = req.params.matchId;
+//     const teamId = parseInt(req.params.teamId);
+//     const match = await prisma.match.findUnique({
+//       where: {
+//         id: parseInt(matchId),
+//       },
+//       include: {
+//         HomeTeam: true,
+//         AwayTeam: true,
+//       },
+//     });
+//     if (match.HomeTeam.id !== teamId && match.AwayTeam.id !== teamId) {
+//       res.status(401).json({
+//         error: `Team id ${teamId} does not belong to any team in match ${matchId}`,
+//       });
+//       return;
+//     }
+//     const team = await prisma.team.findUnique({
+//       where: {
+//         id: teamId,
+//       },
+//       include: {
+//         Players: {
+//           include: {
+//             Participant: true,
+//           },
+//         },
+//         Coaches: {
+//           include: {
+//             Participant: true,
+//           },
+//         },
+//       },
+//     });
+//     res.status(200).json(team);
+//   } catch (e) {
+//     console.log(e);
+//     res.status(401).json({ error: e.message });
+//   }
+// });
 
-app.post("/parse-data", upload.single("data"), async (req, res) => {
-  try {
-    const dataFile = req.file;
-    parseCsv(dataFile);
-    fs.unlink(dataFile.path, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    });
-    res.status(200).json({ message: "success" });
-  } catch (e) {
-    console.log(e);
-    res.status(401).json({ error: e.message });
-  }
-});
-
-app.get("/participant/:id/matches", async (req: any, res) => {
-  try {
-    const participantId = parseInt(req.params.id);
-    const currentMatch = parseInt(req.query.currentMatch);
-    const filteredMatches = await getAllMatches(participantId, currentMatch);
-    res.status(200).json(filteredMatches);
-  } catch (e) {
-    console.log(e);
-    res.status(401).json({ error: e.message });
-  }
-});
-
-app.post("/parse-schedule", upload.single("data"), async (req, res) => {
-  try {
-    const dataFile = req.file;
-    await parseSchedule(dataFile);
-    fs.unlink(dataFile.path, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    });
-    res.json({ message: "success" });
-  } catch (e) {
-    console.log(e);
-    res.status(401).json({ error: e.message });
-  }
-});
+// app.get("/participant/:id/matches", async (req: any, res) => {
+//   try {
+//     const participantId = parseInt(req.params.id);
+//     const currentMatch = parseInt(req.query.currentMatch);
+//     const filteredMatches = await getAllMatches(participantId, currentMatch);
+//     res.status(200).json(filteredMatches);
+//   } catch (e) {
+//     console.log(e);
+//     res.status(401).json({ error: e.message });
+//   }
+// });
 
 export default app;

@@ -1,3 +1,4 @@
+// NOTE: Decommisioned. will fix later
 import fs from "fs";
 import Papa from "papaparse";
 import { prisma } from "../prisma/client";
@@ -15,7 +16,7 @@ export const findOrCreateTeam = async (teamName, category) => {
     let team = await prisma.team.findUnique({
       where: {
         category_teamName: {
-          category: category,
+          categoryId: category,
           teamName: teamName,
         },
       },
@@ -24,7 +25,8 @@ export const findOrCreateTeam = async (teamName, category) => {
       team = await prisma.team.create({
         data: {
           teamName: teamName,
-          category: category,
+          categoryId: category,
+          password: "",
         },
       });
       console.log(`Created team ${teamName}`);
@@ -57,6 +59,7 @@ export const findOrCreateParticipant = async (
           phoneNumber: phoneNumber,
           userId: 0,
           email: "",
+          gender: "",
         },
       });
       console.log(`Created participant ${participantName}`);
@@ -99,7 +102,6 @@ export const parseCsv = async (csv) => {
             participantId: participant.id,
             TeamId: team.id,
             certification,
-            regNumber: regNumber || null,
           },
         });
         console.log("Created Coach", participantName, teamName);
@@ -108,8 +110,7 @@ export const parseCsv = async (csv) => {
           data: {
             participantId: participant.id,
             teamId: team.id,
-            number: jerseyNumber || null,
-            regNumber: regNumber || null,
+            jerseyNumber: jerseyNumber || null,
           },
         });
         console.log("Created Player", participantName, teamName);

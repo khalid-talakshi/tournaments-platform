@@ -1,3 +1,5 @@
+// Note: Decommissioned, will fix at later date
+
 import fs from "fs";
 import Papa from "papaparse";
 import { prisma } from "../prisma/client";
@@ -6,7 +8,7 @@ const findTeam = async (category, teamName) => {
   const team = await prisma.team.findUnique({
     where: {
       category_teamName: {
-        category,
+        categoryId: category,
         teamName,
       },
     },
