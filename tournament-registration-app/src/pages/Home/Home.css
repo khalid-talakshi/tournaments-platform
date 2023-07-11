@@ -1,0 +1,10 @@
+.logo {
+    will-change: filter;
+    filter: drop-shadow(0 0 2em #f8f538aa);
+    width: 30%;
+    height: auto;
+  }
+
+.center-box {
+  height: 100%;
+}
