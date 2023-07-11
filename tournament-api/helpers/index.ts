@@ -9,5 +9,6 @@ export {
   getExtension,
   uploadObject,
   deleteObject,
+  getObjectByKey,
 } from "./s3";
 export { upload } from "./multer";

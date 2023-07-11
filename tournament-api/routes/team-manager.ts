@@ -109,6 +109,13 @@ export const teamManagerRoutes = (app: Express) => {
       const { firstName, lastName, dob } = req.body;
       const headshot = req.file;
       const dataToUpdate = {};
+
+      const tm = await prisma.teamManager.findUnique({
+        where: {
+          userId,
+        },
+      });
+
       if (firstName) {
         dataToUpdate["firstName"] = firstName;
       }
@@ -121,18 +128,18 @@ export const teamManagerRoutes = (app: Express) => {
       if (headshot) {
         console.log("uplaoding new headshot");
         const extension = getExtension(headshot);
-        const key = `${userId}-tm-headshot.${extension}`;
+        const key = `${tm.id}-tm-headshot.${extension}`;
         await uploadObject(key, headshot.buffer);
       }
 
-      const tm = await prisma.teamManager.update({
+      const updatedTM = await prisma.teamManager.update({
         where: {
           userId,
         },
         data: dataToUpdate,
       });
 
-      res.json(tm);
+      res.json(updatedTM);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === "P2025") {

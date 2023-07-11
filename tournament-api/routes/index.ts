@@ -6,3 +6,4 @@ export { teamsRoutes } from "./teams";
 export { playersRoutes } from "./players";
 export { categoryRoutes } from "./category";
 export { coachesRoutes } from "./coach";
+export { imageRoutes } from "./images";

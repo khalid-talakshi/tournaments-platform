@@ -11,6 +11,7 @@ import {
   playersRoutes,
   categoryRoutes,
   coachesRoutes,
+  imageRoutes,
 } from "./routes";
 
 dotenv.config();
@@ -29,6 +30,7 @@ teamsRoutes(app);
 playersRoutes(app);
 categoryRoutes(app);
 coachesRoutes(app);
+imageRoutes(app);
 
 // app.get("/match/:id", async (req, res) => {
 //   try {
