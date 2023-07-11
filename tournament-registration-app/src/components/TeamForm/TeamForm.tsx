@@ -61,6 +61,7 @@ export const TeamForm = ({ team }: Props) => {
         if (data.error) {
           setError(data.error.message);
         } else {
+          console.log(data);
           navigate("/dashboard");
         }
       },

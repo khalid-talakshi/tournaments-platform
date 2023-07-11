@@ -6,6 +6,7 @@ import { useCookie } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import { TeamManager } from "../../types";
+import { S3Image } from "../S3Image";
 
 export interface Props {
   teamManager?: TeamManager;
@@ -19,9 +20,11 @@ export const TeamManagerForm = ({ teamManager }: Props) => {
 
   const handlePhoto = () => {
     if (teamManager?.headshot && !headshot) {
-      return `https://test-gold-cup.s3.ca-central-1.amazonaws.com/${teamManager.headshot!}`;
+      return (
+        <S3Image imageKey={teamManager.headshot} token={getCookie() || ""} />
+      );
     } else if (headshot) {
-      return headshot;
+      return <S3Image headshot={headshot} token={getCookie() || ""} />;
     } else {
       return "";
     }
@@ -198,7 +201,7 @@ export const TeamManagerForm = ({ teamManager }: Props) => {
           </div>
           <div className="col-md-5 d-flex justify-content-center">
             {teamManager?.headshot || headshot ? (
-              <img src={handlePhoto()} alt="headshot" />
+              handlePhoto()
             ) : (
               <p>No headshot yet</p>
             )}

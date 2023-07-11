@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCookie } from "../../hooks";
 import { isUserError, TeamManager } from "../../types";
 import { useNavigate } from "react-router-dom";
+import { S3Image } from "../S3Image";
 
 export const TeamManagerTab = () => {
   const { cookie } = useCookie("token");
@@ -51,17 +52,13 @@ export const TeamManagerTab = () => {
     return new Date(date).toISOString().split("T")[0];
   };
 
+  console.log((data as TeamManager)?.headshot);
+
   const hasTeamManagerMarkup = (
     <div className="row">
       <div className="col-md-4">
         {(data as TeamManager)?.headshot ? (
-          <img
-            src={`https://test-gold-cup.s3.ca-central-1.amazonaws.com/${(
-              data as TeamManager
-            ).headshot!}`}
-            style={{ width: "100%", height: "auto" }}
-            alt={(data as TeamManager)?.headshot}
-          />
+          <S3Image imageKey={(data as TeamManager).headshot} token={cookie!} />
         ) : null}
       </div>
       <div className="col-md-8">
