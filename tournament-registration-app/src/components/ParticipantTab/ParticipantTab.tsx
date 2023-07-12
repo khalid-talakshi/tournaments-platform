@@ -3,10 +3,12 @@ import { getParticipants } from "../../api";
 import { useCookie } from "../../hooks";
 import { Participant, UserError, isUserError } from "../../types";
 import { ParticipantCard } from "..";
+import { useNavigate } from "react-router-dom";
 
 export const ParticipantTab = () => {
   const { cookie } = useCookie("token");
   const { data } = useQuery(["participants", cookie], getParticipants);
+  const navigate = useNavigate();
 
   const chunk = (data: any[]) => {
     const chunked = [];
@@ -40,7 +42,12 @@ export const ParticipantTab = () => {
     <>
       <div className="d-flex justify-content-between mt-2">
         <h2>Participants</h2>
-        <button className="btn btn-primary">Create Participant</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate("/participant/create")}
+        >
+          Create Participant
+        </button>
       </div>
       <div className="row mt-2">
         <p>

@@ -7,3 +7,4 @@ export { TeamManagerCreate } from "./TeamManagerCreate";
 export { TeamManagerEdit } from "./TeamManagerEdit";
 export { TeamCreate } from "./TeamCreate";
 export { TeamEdit } from "./TeamEdit";
+export { ParticipantCreate } from "./ParticipantCreate";

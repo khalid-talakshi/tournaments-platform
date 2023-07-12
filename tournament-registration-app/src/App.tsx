@@ -10,6 +10,7 @@ import {
   TeamManagerEdit,
   TeamCreate,
   TeamEdit,
+  ParticipantCreate,
 } from "./pages";
 import {
   BrowserRouter as Router,
@@ -28,6 +29,7 @@ export default function App() {
         <BrowserRouter>
           <Navbar />
           <Routes>
+            <Route path="/participant/create" element={<ParticipantCreate />} />
             <Route
               path="/team-manager/create"
               element={<TeamManagerCreate />}
