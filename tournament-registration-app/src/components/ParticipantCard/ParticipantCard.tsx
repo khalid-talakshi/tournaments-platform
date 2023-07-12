@@ -9,6 +9,16 @@ export interface Props {
 export const ParticipantCard = ({ participant }: Props) => {
   const { getCookie } = useCookie("token");
 
+  const verificationIcon = () => {
+    if (participant.Verification?.status === "APPROVED") {
+      return <i className="bi bi-check-circle text-success me-1"></i>;
+    } else if (participant.Verification?.status === "REJECTED") {
+      return <i className="bi bi-x-circle text-danger me-1"></i>;
+    } else {
+      return <i className="bi bi-question-circle text-warning me-1"></i>;
+    }
+  };
+
   const friendlyDate = (dateStr: string) => {
     if (dateStr === "") {
       return "";
@@ -38,11 +48,7 @@ export const ParticipantCard = ({ participant }: Props) => {
           Date of Birth: {friendlyDate(participant.dob)}
         </p>
         <p className="card-text">
-          Verification Status:{" "}
-          <i
-            className="bi bi-check-circle"
-            style={{ color: "yellow", paddingRight: "1%" }}
-          ></i>
+          Verification Status: {verificationIcon()}
           {participant.Verification?.status}
         </p>
         <p className="card-text text-muted">
