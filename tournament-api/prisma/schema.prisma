@@ -139,5 +139,5 @@ model Verification {
   status        String
   participantId Int @unique
   reason        String?
-  Participant   Participant   @relation(fields: [participantId], references: [id], map: "Participant_verificationId_fkey")
+  Participant   Participant   @relation(fields: [participantId], references: [id], map: "Participant_verificationId_fkey", onDelete: Cascade)
 }

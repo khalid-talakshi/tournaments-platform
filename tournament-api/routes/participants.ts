@@ -297,19 +297,33 @@ export const participantRoutes = (app: Express) => {
     try {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader);
-      const participantId = req.params.id;
+      const participantId = parseInt(req.params.id);
 
-      const participant = await prisma.participant.delete({
+      let participant = await prisma.participant.findUnique({
         where: {
-          id: parseInt(participantId),
-          userId: userId,
+          id: participantId,
+        },
+      });
+
+      if (!participant) {
+        throw Error("noParticipant");
+      }
+
+      if (participant.userId !== userId) {
+        throw Error("notAuthorized");
+      }
+
+      participant = await prisma.participant.delete({
+        where: {
+          id: participantId,
         },
       });
 
       await deleteObject(participant.headshotKey);
       await deleteObject(participant.photoIdKey);
-      res.json(participant);
+      res.status(200).send(participant);
     } catch (e) {
+      console.log(e);
       if (e instanceof PrismaClientKnownRequestError) {
         if (e.code === "P2025") {
           const error: UserError = {
@@ -318,6 +332,9 @@ export const participantRoutes = (app: Express) => {
           };
           res.status(401).json(error);
           return;
+        } else {
+          console.log(e);
+          res.status(401).json({ error: e.message });
         }
       } else {
         console.log(e);
