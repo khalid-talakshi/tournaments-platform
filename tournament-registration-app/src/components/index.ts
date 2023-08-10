@@ -8,3 +8,5 @@ export { TeamForm } from "./TeamForm";
 export { ParticipantTab } from "./ParticipantTab";
 export { S3Image } from "./S3Image";
 export { ParticipantCard } from "./ParticipantCard";
+export { ParticipantForm } from "./ParticipantForm";
+export { HeadshotCam } from "./HeadshotCam";

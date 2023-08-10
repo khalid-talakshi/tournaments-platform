@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { ParticipantForm } from "../../components";
 
 export const ParticipantCreate = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export const ParticipantCreate = () => {
         <i className="bi-arrow-left me-1"></i>Back
       </a>
       <h1>Create Participant</h1>
+      <ParticipantForm />
     </div>
   );
 };

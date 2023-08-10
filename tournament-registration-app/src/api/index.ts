@@ -11,3 +11,4 @@ export { updateTeam } from "./updateTeam";
 export { getTeam } from "./getTeam";
 export { getParticipants } from "./getParticipants";
 export { getImage } from "./getImage";
+export { createParticipant } from "./createParticipant";
