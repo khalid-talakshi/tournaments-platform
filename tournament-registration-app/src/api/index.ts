@@ -12,3 +12,4 @@ export { getTeam } from "./getTeam";
 export { getParticipants } from "./getParticipants";
 export { getImage } from "./getImage";
 export { createParticipant } from "./createParticipant";
+export { deleteParticipant } from "./deleteParticipant";
