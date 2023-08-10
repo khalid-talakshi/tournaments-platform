@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Category" ALTER COLUMN "minAge" DROP NOT NULL,
-ALTER COLUMN "maxAge" DROP NOT NULL;

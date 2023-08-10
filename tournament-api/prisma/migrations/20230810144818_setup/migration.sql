@@ -1,24 +1,10 @@
 -- CreateTable
-CREATE TABLE "CheckIn" (
-    "id" SERIAL NOT NULL,
-    "matchId" INTEGER,
-    "participantId" INTEGER,
-    "teamId" INTEGER,
-    "status" VARCHAR(255),
-    "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMPTZ(0) NOT NULL,
-
-    CONSTRAINT "CheckIn_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Coach" (
     "id" SERIAL NOT NULL,
     "certification" VARCHAR(255),
     "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMPTZ(0) NOT NULL,
     "TeamId" INTEGER,
-    "regNumber" INTEGER,
     "participantId" INTEGER,
 
     CONSTRAINT "Coach_pkey" PRIMARY KEY ("id")
@@ -52,6 +38,11 @@ CREATE TABLE "Participant" (
     "phoneNumber" VARCHAR(255) NOT NULL,
     "email" VARCHAR(255) NOT NULL,
     "parentEmail" VARCHAR(255),
+    "headshotKey" VARCHAR(255),
+    "photoIdKey" VARCHAR(255),
+    "waiverKey" VARCHAR(255),
+    "gender" VARCHAR(255) NOT NULL,
+    "verificationId" INTEGER,
 
     CONSTRAINT "Participant_pkey" PRIMARY KEY ("id")
 );
@@ -59,11 +50,10 @@ CREATE TABLE "Participant" (
 -- CreateTable
 CREATE TABLE "Player" (
     "id" SERIAL NOT NULL,
-    "number" INTEGER DEFAULT 0,
     "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMPTZ(0) NOT NULL,
-    "TeamId" INTEGER,
-    "regNumber" INTEGER,
+    "teamId" INTEGER,
+    "jerseyNumber" INTEGER NOT NULL DEFAULT 0,
     "participantId" INTEGER NOT NULL,
 
     CONSTRAINT "Player_pkey" PRIMARY KEY ("id")
@@ -75,8 +65,8 @@ CREATE TABLE "Team" (
     "teamName" VARCHAR(255),
     "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMPTZ(0) NOT NULL,
-    "category" VARCHAR(255),
-    "password" VARCHAR(255),
+    "categoryId" INTEGER,
+    "password" VARCHAR(255) NOT NULL,
     "teamManagerId" INTEGER,
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
@@ -106,8 +96,30 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "CheckIn_matchId_participantId_teamId_key" ON "CheckIn"("matchId", "participantId", "teamId");
+-- CreateTable
+CREATE TABLE "Category" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(0) NOT NULL,
+    "minAge" INTEGER,
+    "maxAge" INTEGER,
+    "female" BOOLEAN DEFAULT false,
+
+    CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Verification" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(0) NOT NULL,
+    "status" TEXT NOT NULL,
+    "participantId" INTEGER NOT NULL,
+    "reason" TEXT,
+
+    CONSTRAINT "Verification_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateIndex
 CREATE INDEX "participantIdIndex" ON "Coach"("participantId");
@@ -131,22 +143,28 @@ CREATE UNIQUE INDEX "Participant_name_userId_key" ON "Participant"("name", "user
 CREATE INDEX "participantId" ON "Player"("participantId");
 
 -- CreateIndex
-CREATE INDEX "TeamId" ON "Player"("TeamId");
+CREATE INDEX "TeamId" ON "Player"("teamId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Player_participantId_TeamId_key" ON "Player"("participantId", "TeamId");
+CREATE UNIQUE INDEX "Player_participantId_teamId_key" ON "Player"("participantId", "teamId");
 
 -- CreateIndex
 CREATE INDEX "teamManagerId" ON "Team"("teamManagerId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Team_category_teamName_key" ON "Team"("category", "teamName");
+CREATE UNIQUE INDEX "Team_categoryId_teamName_key" ON "Team"("categoryId", "teamName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TeamManager_userId_key" ON "TeamManager"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Verification_participantId_key" ON "Verification"("participantId");
 
 -- AddForeignKey
 ALTER TABLE "Coach" ADD CONSTRAINT "Coaches_ibfk_1" FOREIGN KEY ("TeamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -164,7 +182,7 @@ ALTER TABLE "Match" ADD CONSTRAINT "Matches_ibfk_2" FOREIGN KEY ("awayTeamId") R
 ALTER TABLE "Participant" ADD CONSTRAINT "user_relation" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Player" ADD CONSTRAINT "Players_ibfk_1" FOREIGN KEY ("TeamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Player" ADD CONSTRAINT "Players_ibfk_1" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Player" ADD CONSTRAINT "Players_ibfk_2" FOREIGN KEY ("participantId") REFERENCES "Participant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -173,4 +191,10 @@ ALTER TABLE "Player" ADD CONSTRAINT "Players_ibfk_2" FOREIGN KEY ("participantId
 ALTER TABLE "Team" ADD CONSTRAINT "Teams_ibfk_1" FOREIGN KEY ("teamManagerId") REFERENCES "TeamManager"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Team" ADD CONSTRAINT "category_relation" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "TeamManager" ADD CONSTRAINT "TeamManager_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Verification" ADD CONSTRAINT "Participant_verificationId_fkey" FOREIGN KEY ("participantId") REFERENCES "Participant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

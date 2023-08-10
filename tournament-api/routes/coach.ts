@@ -20,7 +20,6 @@ export const coachesRoutes = (app: Express) => {
       const participant = await prisma.participant.findUnique({
         where: {
           id: participantId,
-          userId,
         },
       });
       if (!participant) {
@@ -177,14 +176,32 @@ export const coachesRoutes = (app: Express) => {
     try {
       const coachId = req.params.id;
       const { userId } = decodeToken(req.headers.authorization!);
-      const coach = await prisma.coach.delete({
+
+      // look up coach
+      let coach = await prisma.coach.findUnique({
         where: {
           id: parseInt(coachId),
-          Participant: {
-            userId,
-          },
+        },
+        include: {
+          Participant: true,
+          Team: true,
         },
       });
+      // validate that it belongs to the user
+      if (coach?.Participant.userId !== userId) {
+        throw Error("invalidCoachId");
+      }
+      // if it does delete coach
+      coach = await prisma.coach.delete({
+        where: {
+          id: parseInt(coachId),
+        },
+        include: {
+          Participant: true,
+          Team: true,
+        },
+      });
+      // if it doesn't throw error
       res.status(200).json(coach);
     } catch (e) {
       console.log(e);

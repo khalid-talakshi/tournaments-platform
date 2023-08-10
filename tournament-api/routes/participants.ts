@@ -21,18 +21,21 @@ export const participantRoutes = (app: Express) => {
     upload.fields([
       { name: "headshot", maxCount: 1 },
       { name: "photoId", maxCount: 1 },
+      { name: "waiver", maxCount: 1 },
     ]),
     async (req, res) => {
       try {
         const { name, dob, phoneNumber, email, parentEmail, gender } = req.body;
         const headshot = req.files["headshot"][0];
         const photoId = req.files["photoId"][0];
+        const waiver = req.files["waiver"][0];
         const authHeader = req.headers.authorization;
         const { userId } = decodeToken(authHeader!);
         if (name === "") {
           throw Error("noName");
         }
-        if (phoneNumber === "") {
+        console.log("phoneNumber", phoneNumber);
+        if (phoneNumber && phoneNumber === "") {
           throw Error("noPhoneNumber");
         }
         if (emailRegex.test(email) === false) {
@@ -52,24 +55,29 @@ export const participantRoutes = (app: Express) => {
           data: {
             name,
             dob: new Date(formattedDob),
-            userId,
-            phoneNumber,
+            phoneNumber: phoneNumber || null,
             email,
             parentEmail,
             gender,
-          },
-          include: {
-            User: true,
+            User: {
+              connect: {
+                id: userId,
+              },
+            },
           },
         });
+
+        console.log("created participant");
 
         const headshotKey = `${participant.id}-headshot.${getExtension(
           headshot
         )}`;
         const photoIdKey = `${participant.id}-photoId.${getExtension(photoId)}`;
+        const waiverKey = `${participant.id}-waiver.${getExtension(waiver)}}`;
 
         await uploadObject(headshotKey, headshot.buffer);
         await uploadObject(photoIdKey, photoId.buffer);
+        await uploadObject(waiverKey, waiver.buffer);
 
         const verificationEntry = await prisma.verification.create({
           data: {
@@ -85,12 +93,17 @@ export const participantRoutes = (app: Express) => {
           data: {
             headshotKey: headshotKey,
             photoIdKey: photoIdKey,
+            waiverKey: waiverKey,
             verificationId: verificationEntry.id,
+          },
+          include: {
+            User: true,
           },
         });
 
         res.status(201).json(updatedParticipant);
       } catch (e) {
+        console.log(e);
         if (e instanceof PrismaClientKnownRequestError) {
           if (
             e.code === "P2002" &&
@@ -245,7 +258,7 @@ export const participantRoutes = (app: Express) => {
         const participant = await prisma.participant.update({
           where: {
             id: parseInt(participantId),
-            userId: userId,
+            userId,
           },
           data: {
             name,

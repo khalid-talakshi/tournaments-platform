@@ -1,6 +1,5 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["extendedWhereUnique"]
   binaryTargets   = ["native", "darwin-arm64", "linux-arm64-openssl-1.1.x", "debian-openssl-1.1.x"]
 }
 
@@ -15,9 +14,9 @@ model Coach {
   createdAt     DateTime     @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
   TeamId        Int?
-  participantId Int?
+  participantId Int          @db.Integer
   Team          Team?        @relation(fields: [TeamId], references: [id], map: "Coaches_ibfk_1")
-  Participant   Participant? @relation(fields: [participantId], references: [id], map: "Coaches_ibfk_2")
+  Participant   Participant  @relation(fields: [participantId], references: [id], map: "Coaches_ibfk_2")
 
   @@index([participantId], map: "participantIdIndex")
   @@index([TeamId], map: "TeamIdIndex")
@@ -54,6 +53,7 @@ model Participant {
   parentEmail    String?      @db.VarChar(255)
   headshotKey    String?      @db.VarChar(255)
   photoIdKey     String?      @db.VarChar(255)
+  waiverKey      String?      @db.VarChar(255)
   gender         String       @db.VarChar(255)
   verificationId Int?         @db.Integer
   User           User         @relation(fields: [userId], references: [id], map: "user_relation")
@@ -71,7 +71,7 @@ model Player {
   updatedAt     DateTime    @updatedAt @db.Timestamptz(0)
   teamId        Int?
   jerseyNumber  Int         @default(0)
-  participantId Int
+  participantId Int         @db.Integer
   Team          Team?       @relation(fields: [teamId], references: [id], map: "Players_ibfk_1")
   Participant   Participant @relation(fields: [participantId], references: [id], map: "Players_ibfk_2")
 
