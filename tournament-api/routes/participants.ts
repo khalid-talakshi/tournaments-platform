@@ -73,7 +73,7 @@ export const participantRoutes = (app: Express) => {
           headshot
         )}`;
         const photoIdKey = `${participant.id}-photoId.${getExtension(photoId)}`;
-        const waiverKey = `${participant.id}-waiver.${getExtension(waiver)}}`;
+        const waiverKey = `${participant.id}-waiver.${getExtension(waiver)}`;
 
         await uploadObject(headshotKey, headshot.buffer);
         await uploadObject(photoIdKey, photoId.buffer);
@@ -223,6 +223,7 @@ export const participantRoutes = (app: Express) => {
     upload.fields([
       { name: "headshot", maxCount: 1 },
       { name: "photoId", maxCount: 1 },
+      { name: "waiver", maxCount: 1 },
     ]),
     async (req, res) => {
       try {
@@ -235,10 +236,33 @@ export const participantRoutes = (app: Express) => {
           throw Error("noParentEmail");
         }
 
+        const dataToUpdate: any = {};
+
         console.log("req.files", req.files);
 
         const headshot = req.files["headshot"]?.[0];
         const photoId = req.files["photoId"]?.[0];
+        const waiver = req.files["waiver"]?.[0];
+
+        if (name) {
+          dataToUpdate["name"] = name;
+        }
+
+        if (dob) {
+          dataToUpdate["dob"] = new Date(dob);
+        }
+
+        if (phoneNumber) {
+          dataToUpdate["phoneNumber"] = phoneNumber;
+        }
+
+        if (email) {
+          dataToUpdate["email"] = email;
+        }
+
+        if (parentEmail) {
+          dataToUpdate["parentEmail"] = parentEmail;
+        }
 
         if (headshot) {
           console.log("headshot", headshot);
@@ -255,17 +279,24 @@ export const participantRoutes = (app: Express) => {
           );
         }
 
+        if (waiver) {
+          await uploadObject(
+            `${participantId}-waiver.${getExtension(waiver)}`,
+            waiver.buffer
+          );
+        }
+
         const participant = await prisma.participant.update({
           where: {
             id: parseInt(participantId),
-            userId,
           },
           data: {
-            name,
-            dob,
-            phoneNumber,
-            email,
-            parentEmail,
+            ...dataToUpdate,
+            VerificationStatus: {
+              update: {
+                status: VerificationStatus.PENDING,
+              },
+            },
           },
         });
         res.json(participant);
@@ -321,6 +352,7 @@ export const participantRoutes = (app: Express) => {
 
       await deleteObject(participant.headshotKey);
       await deleteObject(participant.photoIdKey);
+      await deleteObject(participant.waiverKey);
       res.status(200).send(participant);
     } catch (e) {
       console.log(e);
