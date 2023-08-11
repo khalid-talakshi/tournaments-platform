@@ -28,21 +28,24 @@ export const teamsRoutes = (app: Express) => {
         password || `${teamName}-${category}`,
         10
       );
+      console.log(category);
       const categoryEntry = await prisma.category.findFirst({
         where: {
-          name: category,
+          code: category,
         },
       });
 
-      if (!category) {
+      if (!categoryEntry) {
         throw new Error("invalidCategory");
       }
+
+      console.log(categoryEntry);
       const team = await prisma.team.create({
         data: {
           teamName: teamName,
-          categoryId: category!.id,
           teamManagerId: teamManager!.id,
           password: hashedPassword,
+          categoryId: categoryEntry!.id,
         },
         include: {
           Category: true,
@@ -94,7 +97,9 @@ export const teamsRoutes = (app: Express) => {
       }
       const teams = await prisma.team.findMany({
         where: {
-          teamManagerId: teamManager!.id,
+          TeamManager: {
+            id: teamManager!.id,
+          },
         },
         include: {
           Category: includeCategory === "true",
@@ -118,6 +123,7 @@ export const teamsRoutes = (app: Express) => {
     try {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader!);
+      const { includePlayers, includeCoaches } = req.query;
       const teamManager = await prisma.teamManager.findUnique({
         where: {
           userId,
@@ -129,7 +135,10 @@ export const teamsRoutes = (app: Express) => {
       const team = await prisma.team.findUnique({
         where: {
           id: Number(req.params.id),
-          teamManagerId: teamManager!.id,
+        },
+        include: {
+          Players: includePlayers === "true",
+          Coaches: includeCoaches === "true",
         },
       });
       if (!team) {

@@ -88,7 +88,7 @@ model Team {
   categoryId    Int?
   password      String       @db.VarChar(255)
   teamManagerId Int?
-  teamManager   TeamManager? @relation("Teams_teamManagerIdToParticipants", fields: [teamManagerId], references: [id], map: "Teams_ibfk_1")
+  TeamManager   TeamManager? @relation("Teams_teamManagerIdToParticipants", fields: [teamManagerId], references: [id], map: "Teams_ibfk_1")
   Coaches       Coach[]
   HomeMatches   Match[]      @relation("Matches_homeTeamIdToTeams")
   AwayMatches   Match[]      @relation("Matches_awayTeamIdToTeams")
@@ -124,6 +124,7 @@ model User {
 model Category {
   id        Int      @id @default(autoincrement())
   name      String   @unique
+  code      String   @unique
   createdAt DateTime @default(now()) @db.Timestamptz(0)
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
   minAge    Int?

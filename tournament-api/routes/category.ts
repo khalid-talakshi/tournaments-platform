@@ -27,7 +27,7 @@ export const categoryRoutes = (app: Express) => {
   });
 
   app.post("/categories", authenticateAdmin, async (req, res) => {
-    const { name, minAge, maxAge, female } = req.body;
+    const { name, minAge, maxAge, female, code } = req.body;
 
     try {
       const category = await prisma.category.create({
@@ -36,6 +36,7 @@ export const categoryRoutes = (app: Express) => {
           minAge,
           maxAge,
           female,
+          code,
         },
       });
       res.status(201).json(category);
