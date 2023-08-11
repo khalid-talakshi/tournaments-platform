@@ -8,7 +8,9 @@ export const getTeam = async (
   try {
     const [_key, token, id] = context.queryKey;
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/teams/${id}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/teams/${id}?includePlayers=true&includeCoaches=true`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

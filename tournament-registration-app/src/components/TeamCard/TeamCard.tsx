@@ -29,9 +29,14 @@ export const TeamCard = ({ team }: Props) => {
       <div className="card-body">
         <h5 className="card-title">{team.teamName}</h5>
         <h6 className="card-subtitle mb-2 text-muted">
-          Division: {team.category}
+          Division: {team["Category"].code}
         </h6>
-        <button className="btn btn-link">View</button>
+        <button
+          className="btn btn-link"
+          onClick={() => navigate(`/teams/${team.id}`)}
+        >
+          View
+        </button>
         <button
           className="btn btn-link"
           onClick={() => navigate(`/teams/${team.id}/edit`)}

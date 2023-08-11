@@ -12,6 +12,7 @@ import {
   TeamEdit,
   ParticipantCreate,
   ParticipantEdit,
+  TeamView,
 } from "./pages";
 import {
   BrowserRouter as Router,
@@ -40,6 +41,7 @@ export default function App() {
               path="/team-manager/:id/edit"
               element={<TeamManagerEdit />}
             />
+            <Route path="/teams/:id" element={<TeamView />} />
             <Route path="/teams/:id/edit" element={<TeamEdit />} />
             <Route path="/teams/create" element={<TeamCreate />} />
             <Route path="/register" element={<RegisterPage />} />

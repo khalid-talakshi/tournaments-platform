@@ -60,9 +60,18 @@ export interface Team {
   createdAt: Date;
   updatedAt: Date;
   sid: number | null;
-  category: string | null;
   teamManagerId: number | null;
   password: string | null;
+  categoryId: number;
+  Categrory: Category;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  code: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export enum TeamCategory {

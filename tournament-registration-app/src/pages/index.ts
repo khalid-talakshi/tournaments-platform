@@ -9,3 +9,4 @@ export { TeamCreate } from "./TeamCreate";
 export { TeamEdit } from "./TeamEdit";
 export { ParticipantCreate } from "./ParticipantCreate";
 export { ParticipantEdit } from "./ParticipantEdit";
+export { TeamView } from "./TeamView";

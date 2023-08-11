@@ -7,11 +7,14 @@ export const getTeams = async (
 ): Promise<any | null | UserError> => {
   try {
     const [_key, token] = context.queryKey;
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/teams`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/teams?includeCategory=true`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data as any[] | null;
   } catch (error: any) {
     return error.response.data as UserError;
