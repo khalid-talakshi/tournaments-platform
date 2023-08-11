@@ -1,13 +1,23 @@
-import { FormEventHandler, useCallback, useRef, useState } from "react";
+import { FormEventHandler, useState } from "react";
 import { useCookie } from "../../hooks";
 import { HeadshotCam } from "../HeadshotCam";
 import { useMutation } from "@tanstack/react-query";
-import { createParticipant } from "../../api";
+import { createParticipant, updateParticipant } from "../../api";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { HeadshotType, Participant } from "../../types";
 
-export const ParticipantForm = () => {
-  const [headshot, setHeadshot] = useState<string | null>(null);
+export interface Props {
+  participant?: Participant | null;
+}
+
+export const ParticipantForm = ({ participant }: Props) => {
+  const [headshot, setHeadshot] = useState<string | null>(
+    participant?.headshotKey || null
+  );
+  const [headshotType, setHeadshotType] = useState<HeadshotType>(
+    HeadshotType.IMAGEKEY
+  );
   const [error, setError] = useState<string | null>(null);
   const { getCookie } = useCookie("token");
   const navigate = useNavigate();
@@ -15,6 +25,21 @@ export const ParticipantForm = () => {
   const createParticipantMutation = useMutation(
     ["createParticipant"],
     (data: FormData) => createParticipant(data, getCookie() || ""),
+    {
+      onSuccess: (data) => {
+        if (data.error) {
+          setError(data.error.message);
+        } else {
+          navigate("/dashboard?tab=participant");
+        }
+      },
+    }
+  );
+
+  const updateParticipantMutation = useMutation(
+    ["updateParticipant"],
+    (data: FormData) =>
+      updateParticipant(data, getCookie() || "", participant?.id),
     {
       onSuccess: (data) => {
         if (data.error) {
@@ -56,12 +81,74 @@ export const ParticipantForm = () => {
     createParticipantMutation.mutate(formData);
   };
 
+  const handleUpdate: FormEventHandler = async (e) => {
+    e.preventDefault();
+    let form = e.target as HTMLFormElement;
+    let name = form.fullName.value;
+    let dob = form.dob.value;
+    let gender = form.gender.value;
+    let email = form.email.value;
+    let phone = form.phoneNum.value;
+    let parentEmail = form.parentEmail.value;
+    let headshotBlob = await fetch(headshot || "").then((r) => r.blob());
+    let headshotFile = new File([headshotBlob], "headshot.png");
+    let waiver = form.waiver.files?.[0];
+    let photoId = form.photoId.files?.[0];
+
+    const formData = new FormData();
+
+    if (!name || name === "") {
+      name = participant?.name;
+    }
+
+    if (!dob || dob === "") {
+      dob = participant?.dob;
+    }
+
+    if (!email || email === "") {
+      email = participant?.email;
+    }
+
+    if (!phone || phone === "") {
+      phone = participant?.phoneNumber;
+    }
+
+    if (!parentEmail || parentEmail === "") {
+      parentEmail = participant?.parentEmail;
+    }
+
+    formData.append("name", name);
+    formData.append("dob", dob);
+    formData.append("gender", gender);
+    formData.append("email", email);
+    formData.append("phoneNumber", phone);
+    formData.append("parentEmail", parentEmail);
+
+    if (headshotFile) {
+      formData.append("headshot", headshotFile);
+    }
+
+    if (waiver) {
+      formData.append("waiver", waiver || "");
+    }
+
+    if (photoId) {
+      formData.append("photoId", photoId || "");
+    }
+
+    updateParticipantMutation.mutate(formData);
+  };
+
+  const photoCallback = () => {
+    setHeadshotType(HeadshotType.HEADSHOT);
+  };
+
   return (
     <div className="container">
       <Alert variant="danger" show={Boolean(error)}>
         {error}
       </Alert>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={participant ? handleUpdate : handleSubmit}>
         <div className="row  mb-1">
           <div className="col-md-4">
             <label htmlFor="fullName" className="form-label">
@@ -72,6 +159,7 @@ export const ParticipantForm = () => {
               className="form-control"
               id="fullName"
               placeholder="Full Name"
+              defaultValue={participant?.name || ""}
             />
           </div>
           <div className="col-md-4">
@@ -83,6 +171,7 @@ export const ParticipantForm = () => {
               className="form-control"
               id="dob"
               placeholder="Date of Birth"
+              defaultValue={participant?.dob.split("T")[0] || ""}
             />
           </div>
           <div className="col-md-4">
@@ -94,6 +183,7 @@ export const ParticipantForm = () => {
               aria-label="Default select example"
               placeholder="Please Select"
               id="gender"
+              defaultValue={participant?.gender || ""}
             >
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -111,6 +201,7 @@ export const ParticipantForm = () => {
               className="form-control"
               id="email"
               placeholder="Email"
+              defaultValue={participant?.email || ""}
             />
           </div>
           <div className="col-md-4">
@@ -122,6 +213,7 @@ export const ParticipantForm = () => {
               className="form-control"
               id="parentEmail"
               placeholder="Parent Email"
+              defaultValue={participant?.parentEmail || ""}
             />
           </div>
           <div className="col-md-4">
@@ -134,9 +226,15 @@ export const ParticipantForm = () => {
               id="phoneNum"
               placeholder="Phone Number"
               pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              defaultValue={participant?.phoneNumber || ""}
             />
           </div>
         </div>
+        {participant && (
+          <div className="row my-1">
+            <h2>Replace Files</h2>
+          </div>
+        )}
         <div className="row my-1">
           <div className="col-md-6">
             <label htmlFor="photoId" className="form-label">
@@ -164,7 +262,12 @@ export const ParticipantForm = () => {
         <div className="row my-1">
           <h1>Headshot</h1>
         </div>
-        <HeadshotCam setHeadshot={setHeadshot} headshot={headshot} />
+        <HeadshotCam
+          setHeadshot={setHeadshot}
+          headshot={headshot}
+          type={headshotType}
+          callback={photoCallback}
+        />
         <div className="row mt-1">
           <div className="col-md-12 d-flex justify-content-center">
             <button className="btn btn-primary" type="submit">

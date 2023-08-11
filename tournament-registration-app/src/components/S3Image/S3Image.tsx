@@ -9,9 +9,11 @@ export interface Props {
 }
 
 export const S3Image = ({ imageKey, token, headshot, cardImage }: Props) => {
+  console.log(imageKey);
   const { data } = useQuery(["image", token, imageKey], getImage, {
     enabled: Boolean(imageKey),
   });
+  console.log(data);
   if (headshot) {
     return (
       <img

@@ -13,3 +13,5 @@ export { getParticipants } from "./getParticipants";
 export { getImage } from "./getImage";
 export { createParticipant } from "./createParticipant";
 export { deleteParticipant } from "./deleteParticipant";
+export { getParticipant } from "./getParticipant";
+export { updateParticipant } from "./updateParticipant";

@@ -107,7 +107,6 @@ export const TeamManagerForm = ({ teamManager }: Props) => {
     const firstName = form.firstName.value;
     const lastName = form.lastName.value;
     const dob = form.dob.value;
-    console.log(dob);
     const headshotBlob = await fetch(headshot || "").then((r) => r.blob());
     const headshotFile = new File([headshotBlob], "headshot.png");
     if (!firstName || firstName === "") {

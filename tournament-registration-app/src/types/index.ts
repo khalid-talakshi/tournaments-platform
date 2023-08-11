@@ -150,6 +150,7 @@ export interface Participant {
   updatedAt: string;
   headshotKey: string;
   photoIdKey: string;
+  waiverKey: string;
   User?: User;
   Verification?: Verification;
 }
@@ -161,6 +162,11 @@ export interface Verification {
   reason: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export enum HeadshotType {
+  HEADSHOT,
+  IMAGEKEY,
 }
 
 

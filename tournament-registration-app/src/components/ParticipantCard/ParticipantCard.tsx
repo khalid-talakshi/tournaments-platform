@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCookie } from "../../hooks";
-import { Participant } from "../../types";
+import { HeadshotType, Participant } from "../../types";
 import { S3Image } from "../S3Image";
 import { deleteParticipant } from "../../api";
 import { useState } from "react";
 import { Alert, Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export interface Props {
   participant: Participant;
@@ -14,6 +15,7 @@ export const ParticipantCard = ({ participant }: Props) => {
   const queryClient = useQueryClient();
   const { getCookie } = useCookie("token");
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   const deleteParticipantMutation = useMutation(
     ["deleteParticipant"],
@@ -82,7 +84,12 @@ export const ParticipantCard = ({ participant }: Props) => {
             {friendlyTime(participant.Verification?.updatedAt || "")}
           </p>
           <div className="d-flex flex-row">
-            <button className="btn btn-primary me-1">Edit</button>
+            <button
+              className="btn btn-primary me-1"
+              onClick={() => navigate(`/participant/${participant.id}/edit`)}
+            >
+              Edit
+            </button>
             <button
               className="btn btn-danger"
               onClick={() => setShowModal(true)}

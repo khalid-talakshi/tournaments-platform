@@ -2,13 +2,21 @@ import Webcam from "react-webcam";
 import { S3Image } from "../S3Image";
 import { useCallback, useRef } from "react";
 import { useCookie } from "../../hooks";
+import { HeadshotType } from "../../types";
 
 interface Props {
   setHeadshot: (headshot: string | null) => void;
   headshot: string | null;
+  type?: HeadshotType;
+  callback?: () => void;
 }
 
-export const HeadshotCam = ({ setHeadshot, headshot }: Props) => {
+export const HeadshotCam = ({
+  setHeadshot,
+  headshot,
+  type,
+  callback,
+}: Props) => {
   const webcamRef = useRef<Webcam | null>(null);
 
   const capture = useCallback(
@@ -16,11 +24,25 @@ export const HeadshotCam = ({ setHeadshot, headshot }: Props) => {
       e.preventDefault();
       const imageSrc = webcamRef.current?.getScreenshot();
       setHeadshot(imageSrc || null);
+      callback && callback();
     },
     [webcamRef]
   );
 
   const { getCookie } = useCookie("token");
+
+  const handlePhoto = () => {
+    if (type == HeadshotType.IMAGEKEY) {
+      console.log("here");
+      return (
+        <S3Image imageKey={headshot || undefined} token={getCookie() || ""} />
+      );
+    } else if (headshot) {
+      return <S3Image headshot={headshot} token={getCookie() || ""} />;
+    } else {
+      return <p>No Headshot Yet</p>;
+    }
+  };
 
   return (
     <div className="row my-3">
@@ -41,11 +63,7 @@ export const HeadshotCam = ({ setHeadshot, headshot }: Props) => {
         </button>
       </div>
       <div className="col-md-5 d-flex justify-content-center">
-        {headshot ? (
-          <S3Image headshot={headshot} token={getCookie() || ""} />
-        ) : (
-          <p>No headshot yet</p>
-        )}
+        {handlePhoto()}
       </div>
     </div>
   );
