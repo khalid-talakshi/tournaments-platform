@@ -167,7 +167,14 @@ export const playersRoutes = (app: Express) => {
                   },
                 }
               : false,
-          Team: params.includeTeam === "true",
+          Team:
+            params.includeTeam === "true"
+              ? {
+                  include: {
+                    Category: params.includeCategory === "true",
+                  },
+                }
+              : false,
         },
       });
       res.status(200).json(players);
