@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 
 export interface Props {
   participant: Participant;
+  key?: any;
 }
 
-export const ParticipantCard = ({ participant }: Props) => {
+export const ParticipantCard = ({ participant, key }: Props) => {
   const queryClient = useQueryClient();
   const { getCookie } = useCookie("token");
   const [showModal, setShowModal] = useState(false);
@@ -60,7 +61,7 @@ export const ParticipantCard = ({ participant }: Props) => {
 
   return (
     <>
-      <div className="card">
+      <div className="card" key={key}>
         <S3Image
           imageKey={participant.headshotKey}
           token={getCookie() || ""}

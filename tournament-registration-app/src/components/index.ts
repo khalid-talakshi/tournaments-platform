@@ -10,3 +10,5 @@ export { S3Image } from "./S3Image";
 export { ParticipantCard } from "./ParticipantCard";
 export { ParticipantForm } from "./ParticipantForm";
 export { HeadshotCam } from "./HeadshotCam";
+export { PlayersTab } from "./PlayersTab";
+export { PlayerCard } from "./PlayerCard";

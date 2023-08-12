@@ -1,5 +1,10 @@
 import { Tab, Tabs } from "react-bootstrap";
-import { ParticipantTab, TeamManagerTab, Teams } from "../../components";
+import {
+  ParticipantTab,
+  PlayersTab,
+  TeamManagerTab,
+  Teams,
+} from "../../components";
 import { useSearchParams } from "react-router-dom";
 
 export const Dashboard = () => {
@@ -21,7 +26,7 @@ export const Dashboard = () => {
           <ParticipantTab />
         </Tab>
         <Tab eventKey="player" title="Players">
-          <p>Player Manager Profile</p>
+          <PlayersTab />
         </Tab>
         <Tab eventKey="coach" title="Coaches">
           <p>Coach Manager Profile</p>

@@ -63,7 +63,7 @@ export interface Team {
   teamManagerId: number | null;
   password: string | null;
   categoryId: number;
-  Categrory: Category;
+  Category?: Category;
 }
 
 export interface Category {
@@ -162,6 +162,17 @@ export interface Participant {
   waiverKey: string;
   User?: User;
   Verification?: Verification;
+}
+
+export interface Player {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  teamId: number;
+  jerseyNumber: number;
+  participantId: number;
+  Team?: Team;
+  Participant?: Participant;
 }
 
 export interface Verification {

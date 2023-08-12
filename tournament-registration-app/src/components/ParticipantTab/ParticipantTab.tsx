@@ -4,30 +4,23 @@ import { useCookie } from "../../hooks";
 import { Participant, UserError, isUserError } from "../../types";
 import { ParticipantCard } from "..";
 import { useNavigate } from "react-router-dom";
+import { chunk } from "../../utilities";
 
 export const ParticipantTab = () => {
   const { cookie } = useCookie("token");
   const { data } = useQuery(["participants", cookie], getParticipants);
   const navigate = useNavigate();
 
-  const chunk = (data: any[]) => {
-    const chunked = [];
-    for (let i = 0; i < data.length; i += 3) {
-      chunked.push(data.slice(i, i + 3));
-    }
-    return chunked;
-  };
-
   const renderBody = (data?: Participant[] | UserError) => {
     if (isUserError(data)) {
       return <p>{data.message}</p>;
     } else if (data && data.length > 0) {
-      const participantRows = chunk(data);
+      const participantRows = chunk(data, 3);
       const participantCards = participantRows.map((row, index) => (
         <div className="row mt-2" key={index}>
           {row.map((participant: Participant) => (
-            <div className="col-md-4 mt-sm-2">
-              <ParticipantCard participant={participant} key={participant.id} />
+            <div className="col-md-4 mt-sm-2" key={participant.id}>
+              <ParticipantCard participant={participant} />
             </div>
           ))}
         </div>

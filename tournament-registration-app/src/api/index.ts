@@ -15,3 +15,4 @@ export { createParticipant } from "./createParticipant";
 export { deleteParticipant } from "./deleteParticipant";
 export { getParticipant } from "./getParticipant";
 export { updateParticipant } from "./updateParticipant";
+export { getPlayers } from "./getPlayers";
