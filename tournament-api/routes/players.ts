@@ -13,20 +13,29 @@ export const playersRoutes = (app: Express) => {
     try {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader!);
-      const { participantId, teamId, teamPassword, jerseyNumber } = req.body;
+      const participantId = parseInt(req.body.participantId);
+      const teamId = parseInt(req.body.teamId);
+      const jerseyNumber = parseInt(req.body.jerseyNumber);
+      const teamPassword = req.body.password;
       if (!participantId) {
         throw Error("noParticipantId");
       }
+      console.log("has participant id");
       const participant = await prisma.participant.findUnique({
         where: {
           id: participantId,
-          userId,
         },
       });
       if (!participant) {
         throw Error("invalidParticipantId");
       }
       console.log("found participant");
+
+      if (participant.userId !== userId) {
+        throw Error("invalidParticipantForUser");
+      }
+
+      console.log("valid participant for user");
 
       if (!teamId) {
         throw Error("noTeamId");
@@ -58,9 +67,13 @@ export const playersRoutes = (app: Express) => {
         throw Error("invalidParticipantAge");
       }
 
+      console.log("valid participant age");
+
       if (categoryFemale && participant.gender != "female") {
         throw Error("invalidParticipantGender");
       }
+
+      console.log("valid gender");
 
       const sameJersey = await prisma.player.findFirst({
         where: {
@@ -83,6 +96,7 @@ export const playersRoutes = (app: Express) => {
         data: {
           participantId,
           teamId: teamId,
+          jerseyNumber: jerseyNumber,
         },
       });
       res.status(201).json(player);
@@ -232,13 +246,13 @@ export const playersRoutes = (app: Express) => {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader!);
       const { id } = req.params;
-      const { participantId, teamId } = req.body;
+      const { teamId, jerseyNumber } = req.body;
       const player = await prisma.player.findUnique({
         where: {
           id: parseInt(id),
-          Participant: {
-            userId,
-          },
+        },
+        include: {
+          Participant: true,
         },
       });
 
@@ -246,9 +260,13 @@ export const playersRoutes = (app: Express) => {
         throw Error("invalidPlayerId");
       }
 
+      if (player.Participant.userId !== userId) {
+        throw Error("invalidUserForPlayer");
+      }
+
       const sameJersey = await prisma.player.findFirst({
         where: {
-          jerseyNumber: req.body.jerseyNumber,
+          jerseyNumber: jerseyNumber,
           teamId: teamId,
         },
       });
@@ -267,6 +285,7 @@ export const playersRoutes = (app: Express) => {
       });
       res.status(200).json(updatedPlayer);
     } catch (e) {
+      console.log(e);
       if (e.message === "invalidPlayerId") {
         const error: UserError = {
           code: ErrorCode.INVALID_PLAYER_ID,
@@ -294,13 +313,20 @@ export const playersRoutes = (app: Express) => {
       const player = await prisma.player.findUnique({
         where: {
           id: parseInt(id),
+        },
+        include: {
           Participant: {
-            userId,
+            include: {
+              User: true,
+            },
           },
         },
       });
       if (!player) {
         throw Error("invalidPlayerId");
+      }
+      if (player.Participant.userId !== userId) {
+        throw Error("invalidUser");
       }
       const deletedPlayer = await prisma.player.delete({
         where: {
@@ -309,6 +335,7 @@ export const playersRoutes = (app: Express) => {
       });
       res.status(200).json(deletedPlayer);
     } catch (e) {
+      console.log(e);
       if (e.message === "invalidPlayerId") {
         const error: UserError = {
           code: ErrorCode.INVALID_PLAYER_ID,

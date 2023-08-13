@@ -123,7 +123,12 @@ export const teamsRoutes = (app: Express) => {
     try {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader!);
-      const { includePlayers, includeCoaches } = req.query;
+      const {
+        includePlayers,
+        includeCoaches,
+        includeParticipants,
+        includeVerification,
+      } = req.query;
       const teamManager = await prisma.teamManager.findUnique({
         where: {
           userId,
@@ -137,8 +142,36 @@ export const teamsRoutes = (app: Express) => {
           id: Number(req.params.id),
         },
         include: {
-          Players: includePlayers === "true",
-          Coaches: includeCoaches === "true",
+          Players:
+            includePlayers === "true"
+              ? {
+                  include: {
+                    Participant:
+                      includeParticipants === "true"
+                        ? {
+                            include: {
+                              Verification: includeVerification === "true",
+                            },
+                          }
+                        : false,
+                  },
+                }
+              : false,
+          Coaches:
+            includeCoaches === "true"
+              ? {
+                  include: {
+                    Participant:
+                      includeParticipants === "true"
+                        ? {
+                            include: {
+                              Verification: includeVerification === "true",
+                            },
+                          }
+                        : false,
+                  },
+                }
+              : false,
         },
       });
       if (!team) {
@@ -255,10 +288,23 @@ export const teamsRoutes = (app: Express) => {
       if (!teamManager) {
         throw new Error("noTeamManager");
       }
-      const team = await prisma.team.delete({
+      let team = await prisma.team.findUnique({
         where: {
           id: Number(req.params.id),
-          teamManagerId: teamManager!.id,
+        },
+      });
+
+      if (!team) {
+        throw new Error("noTeam");
+      }
+
+      if (team.teamManagerId !== teamManager.id) {
+        throw new Error("notTeamManager");
+      }
+
+      team = await prisma.team.delete({
+        where: {
+          id: Number(req.params.id),
         },
       });
       if (!team) {
