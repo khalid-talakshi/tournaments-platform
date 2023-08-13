@@ -13,7 +13,7 @@ export const coachesRoutes = (app: Express) => {
     try {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader!);
-      const { participantId, teamId, teamPassword } = req.body;
+      const { participantId, teamId, password } = req.body;
       if (!participantId) {
         throw Error("noParticipantId");
       }
@@ -24,6 +24,10 @@ export const coachesRoutes = (app: Express) => {
       });
       if (!participant) {
         throw Error("invalidParticipantId");
+      }
+
+      if (participant.userId !== userId) {
+        throw Error("invalidUserId");
       }
 
       if (!teamId) {
@@ -43,7 +47,7 @@ export const coachesRoutes = (app: Express) => {
         throw Error("invalidTeamId");
       }
 
-      const passwordRes = bcrypt.compare(teamPassword, team.password);
+      const passwordRes = bcrypt.compare(password, team.password);
 
       if (!passwordRes) {
         throw Error("invalidTeamPassword");
@@ -58,6 +62,7 @@ export const coachesRoutes = (app: Express) => {
 
       res.status(201).json(coach);
     } catch (e) {
+      console.log(e);
       if (e.message === "noParticipantId") {
         const error: UserError = {
           code: ErrorCode.MISSING_PLAYER_PARTICIPANT_ID,
@@ -123,6 +128,7 @@ export const coachesRoutes = (app: Express) => {
       const authHeader = req.headers.authorization;
       const { userId } = decodeToken(authHeader!);
       const { includeParticipant, includeTeam, includeCategory } = req.query;
+      console.log(includeParticipant, includeTeam, includeCategory);
       const coaches = await prisma.coach.findMany({
         where: {
           Participant: {
