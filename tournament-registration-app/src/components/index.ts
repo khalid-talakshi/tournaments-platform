@@ -12,3 +12,6 @@ export { ParticipantForm } from "./ParticipantForm";
 export { HeadshotCam } from "./HeadshotCam";
 export { PlayersTab } from "./PlayersTab";
 export { PlayerCard } from "./PlayerCard";
+export { PlayerCreateModal } from "./PlayerCreateModal";
+export { PlayerDeleteModal } from "./PlayerDeleteModal";
+export { PlayerEditModal } from "./PlayerEditModal";

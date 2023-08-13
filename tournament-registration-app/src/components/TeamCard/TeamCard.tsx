@@ -31,6 +31,7 @@ export const TeamCard = ({ team }: Props) => {
         <h6 className="card-subtitle mb-2 text-muted">
           Division: {team.Category?.code}
         </h6>
+        <p className="card-text text-muted">Team ID: {team.id}</p>
         <button
           className="btn btn-link"
           onClick={() => navigate(`/teams/${team.id}`)}

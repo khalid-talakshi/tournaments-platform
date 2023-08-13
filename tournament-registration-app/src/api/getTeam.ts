@@ -10,7 +10,7 @@ export const getTeam = async (
     const response = await axios.get(
       `${
         import.meta.env.VITE_API_URL
-      }/teams/${id}?includePlayers=true&includeCoaches=true`,
+      }/teams/${id}?includePlayers=true&includeCoaches=true&includeParticipants=true&includeVerification=true`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

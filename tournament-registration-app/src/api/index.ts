@@ -16,3 +16,6 @@ export { deleteParticipant } from "./deleteParticipant";
 export { getParticipant } from "./getParticipant";
 export { updateParticipant } from "./updateParticipant";
 export { getPlayers } from "./getPlayers";
+export { createPlayer } from "./createPlayer";
+export { deletePlayer } from "./deletePlayer";
+export { updatePlayer } from "./updatePlayer";

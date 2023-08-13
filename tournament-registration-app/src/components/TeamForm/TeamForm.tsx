@@ -19,7 +19,7 @@ export interface Props {
 export const TeamForm = ({ team }: Props) => {
   console.log(team);
   const [divivsion, setDivision] = useState<TeamCategory>(
-    StringToDivision(team?.Categrory.code || "") || AllDivisions[0]
+    StringToDivision(team?.Category?.code || "") || AllDivisions[0]
   );
   const [teamName, setTeamName] = useState<string>(team?.teamName || "");
   const [password, setPassword] = useState<string>(team?.password || "");
@@ -35,7 +35,7 @@ export const TeamForm = ({ team }: Props) => {
     console.log("useEffect");
     if (team) {
       setDivision(
-        StringToDivision(team.Categrory.code || "") || AllDivisions[0]
+        StringToDivision(team.Category?.code || "") || AllDivisions[0]
       );
       setTeamName(team.teamName || "");
     }
@@ -84,7 +84,11 @@ export const TeamForm = ({ team }: Props) => {
         password: password,
       });
     } else {
-      createTeamMutation.mutate({ category: divivsion, teamName: teamName });
+      createTeamMutation.mutate({
+        category: divivsion,
+        teamName: teamName,
+        password: password,
+      });
     }
   };
 

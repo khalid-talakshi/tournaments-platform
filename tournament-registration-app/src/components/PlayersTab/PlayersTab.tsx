@@ -1,17 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlayers } from "../../api";
 import { useCookie } from "../../hooks";
 import { Player, UserError, isUserError } from "../../types";
-import { PlayerCard } from "..";
+import { PlayerCard, PlayerCreateModal } from "..";
 import { useNavigate } from "react-router-dom";
 import { chunk } from "../../utilities";
+import { useState } from "react";
 
 export const PlayersTab = () => {
   const { cookie } = useCookie("token");
   const { data } = useQuery(["players", cookie], getPlayers);
   const navigate = useNavigate();
-
-  console.log(data);
+  const [showModal, setShowModal] = useState(false);
+  const queryClient = useQueryClient();
 
   const renderBody = (data?: Player[] | UserError) => {
     if (isUserError(data)) {
@@ -37,14 +38,16 @@ export const PlayersTab = () => {
     }
   };
 
+  const handleHide = () => {
+    setShowModal(false);
+    queryClient.invalidateQueries(["players"]);
+  };
+
   return (
     <>
       <div className="d-flex justify-content-between mt-2">
         <h2>Players</h2>
-        <button
-          className="btn btn-primary"
-          onClick={() => navigate("/participant/create")}
-        >
+        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
           Create Player
         </button>
       </div>
@@ -56,6 +59,7 @@ export const PlayersTab = () => {
         </p>
       </div>
       {data && renderBody(data)}
+      <PlayerCreateModal show={showModal} onHide={handleHide} />
     </>
   );
 };

@@ -146,6 +146,13 @@ export interface TeamPayload {
   password?: string;
 }
 
+export interface PlayerPayload {
+  participantId: number;
+  jerseyNumber: number;
+  teamId: number;
+  password: string;
+}
+
 export interface Participant {
   id: number;
   name: string;

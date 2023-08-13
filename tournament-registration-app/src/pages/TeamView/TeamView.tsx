@@ -2,13 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTeam } from "../../api";
 import { useCookie } from "../../hooks";
+import { Player } from "../../types";
+import { verificationIcon } from "../../utilities";
 
 export const TeamView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { getCookie } = useCookie("token");
   const { data, isLoading } = useQuery(
-    ["participant", getCookie() || "", id],
+    ["team", getCookie() || "", id],
     getTeam
   );
 
@@ -29,11 +31,14 @@ export const TeamView = () => {
             </tr>
           </thead>
           <tbody>
-            {data.Players.map((player) => (
+            {data.Players.map((player: Player) => (
               <tr>
-                <td>{player.name}</td>
-                <td>{player.jersey}</td>
-                <td>{player.status}</td>
+                <td>{player.Participant?.name}</td>
+                <td>{player.jerseyNumber}</td>
+                <td>
+                  {verificationIcon(player.Participant!)}
+                  {player.Participant?.Verification?.status}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -54,7 +59,7 @@ export const TeamView = () => {
           </tr>
         </thead>
         <tbody>
-          {data.Coaches.map((coach) => (
+          {data.Coaches.map((coach: any) => (
             <tr>
               <td>{coach.name}</td>
               <td>{coach.status}</td>
