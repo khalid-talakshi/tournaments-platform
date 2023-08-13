@@ -19,3 +19,6 @@ export { getPlayers } from "./getPlayers";
 export { createPlayer } from "./createPlayer";
 export { deletePlayer } from "./deletePlayer";
 export { updatePlayer } from "./updatePlayer";
+export { getCoaches } from "./getCoaches";
+export { createCoach } from "./createCoach";
+export { deleteCoach } from "./deleteCoach";

@@ -15,3 +15,7 @@ export { PlayerCard } from "./PlayerCard";
 export { PlayerCreateModal } from "./PlayerCreateModal";
 export { PlayerDeleteModal } from "./PlayerDeleteModal";
 export { PlayerEditModal } from "./PlayerEditModal";
+export { CoachesTab } from "./CoachesTab";
+export { CoachCard } from "./CoachCard";
+export { CoachesCreateModal } from "./CoachesCreateModal";
+export { CoachDeleteModal } from "./CoachDeleteModal";

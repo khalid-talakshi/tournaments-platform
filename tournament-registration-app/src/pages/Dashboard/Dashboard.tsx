@@ -1,5 +1,6 @@
 import { Tab, Tabs } from "react-bootstrap";
 import {
+  CoachesTab,
   ParticipantTab,
   PlayersTab,
   TeamManagerTab,
@@ -29,7 +30,7 @@ export const Dashboard = () => {
           <PlayersTab />
         </Tab>
         <Tab eventKey="coach" title="Coaches">
-          <p>Coach Manager Profile</p>
+          <CoachesTab />
         </Tab>
         <Tab eventKey="teams" title="Teams">
           <Teams />

@@ -196,4 +196,22 @@ export enum HeadshotType {
   IMAGEKEY,
 }
 
+export interface Coach {
+  id: number;
+  certification: string;
+  createdAt: string;
+  updatedAt: string;
+  teamId: number;
+  participantId: number;
+  Team?: Team;
+  Participant?: Participant;
+}
+
+export interface CoachPayload {
+  certification: string;
+  teamId: number;
+  participantId: number;
+  password: string;
+}
+
 
