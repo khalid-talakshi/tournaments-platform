@@ -15,7 +15,7 @@ model Coach {
   updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
   TeamId        Int?
   participantId Int          @db.Integer
-  Team          Team?        @relation(fields: [TeamId], references: [id], map: "Coaches_ibfk_1")
+  Team          Team?        @relation(fields: [TeamId], references: [id], map: "Coaches_ibfk_1", onDelete: Cascade)
   Participant   Participant  @relation(fields: [participantId], references: [id], map: "Coaches_ibfk_2")
 
   @@index([participantId], map: "participantIdIndex")
@@ -72,7 +72,7 @@ model Player {
   teamId        Int?
   jerseyNumber  Int         @default(0)
   participantId Int         @db.Integer
-  Team          Team?       @relation(fields: [teamId], references: [id], map: "Players_ibfk_1")
+  Team          Team?       @relation(fields: [teamId], references: [id], map: "Players_ibfk_1", onDelete: Cascade)
   Participant   Participant @relation(fields: [participantId], references: [id], map: "Players_ibfk_2")
 
   @@unique([participantId, teamId], name: "ParticipantId_TeamId")
