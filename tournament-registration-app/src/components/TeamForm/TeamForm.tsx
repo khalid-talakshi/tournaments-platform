@@ -48,11 +48,8 @@ export const TeamForm = ({ team }: Props) => {
       onSuccess: (data) => {
         if (data.error) {
           setError(data.error.message);
-        } else if (data.code === 201) {
-          navigate("/dashboard");
         } else {
-          console.log(data);
-          setError("Unknown error");
+          navigate("/dashboard?tab=teams");
         }
       },
     }

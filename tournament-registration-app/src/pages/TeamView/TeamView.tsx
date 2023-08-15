@@ -51,22 +51,29 @@ export const TeamView = () => {
     if (data.Coaches.length === 0) {
       return <div>No coaches</div>;
     } else {
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Coach Name</th>
-            <th scope="col">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.Coaches.map((coach: any) => (
+      return (
+        <table className="table">
+          <thead>
             <tr>
-              <td>{coach.name}</td>
-              <td>{coach.status}</td>
+              <th scope="col">Coach Name</th>
+              <th scope="col">Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>;
+          </thead>
+          <tbody>
+            {data.Coaches.map((coach: any) => {
+              return (
+                <tr>
+                  <td>{coach.Participant.name}</td>
+                  <td>
+                    {verificationIcon(coach.Participant)}
+                    {coach.Participant.Verification.status}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
     }
   };
 
@@ -83,22 +90,62 @@ export const TeamView = () => {
       </a>
       <h1>Dashboard for Team {data.teamName}</h1>
       <div className="row">
-        <div className="col-md-3">
+        <div className="col-md-4">
           <h2>Players</h2>
           {showTeamPlayers()}
         </div>
-        <div className="col-md-3">
+        <div className="col-md-4">
           <h2>Coaches</h2>
           {showTeamCoaches()}
         </div>
-        <div className="col-md-3">
-          <h2>Team Status</h2>
-          <p>
-            A team needs to meet the following requirements to compete. As a
-            Team Manager, it is your responsibility to ensure you meet all the
-            requirements
-          </p>
-          <p>Current Status: Pending</p>
+        <div className="col-md-4">
+          <div className="card mb-2">
+            <div className="card-header">
+              <h5 className="card-title">Team Status</h5>
+            </div>
+            <div className="card-body">
+              <p>
+                A team needs to meet the following requirements to compete. As a
+                Team Manager, it is your responsibility to ensure you meet all
+                the requirements
+              </p>
+              <p>Current Status: Pending</p>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card-header">
+              <h5 className="card-title">Update Password</h5>
+            </div>
+            <div className="card-body">
+              <label htmlFor="oldPassword" className="form-label">
+                Old Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="oldPassword"
+              />
+              <label htmlFor="newPassword" className="form-label">
+                New Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="newPassword"
+              />
+              <label htmlFor="confirmPassword" className="form-label">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="confirmPassword"
+              />
+            </div>
+            <div className="card-footer">
+              <button className="btn btn-primary">Update Password</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCookie } from "../../hooks";
-import { HeadshotType, Participant } from "../../types";
+import { Participant } from "../../types";
 import { S3Image } from "../S3Image";
 import { deleteParticipant } from "../../api";
 import { useState } from "react";
 import { Alert, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { verificationIcon } from "../../utilities";
+import { verificationIcon, friendlyDate, friendlyTime } from "../../utilities";
 
 export interface Props {
   participant: Participant;
@@ -29,22 +29,6 @@ export const ParticipantCard = ({ participant, key }: Props) => {
     }
   );
 
-  const friendlyDate = (dateStr: string) => {
-    if (dateStr === "") {
-      return "";
-    }
-    const date = Date.parse(dateStr);
-    return new Date(date).toISOString().split("T")[0];
-  };
-
-  const friendlyTime = (dateStr: string) => {
-    if (dateStr === "") {
-      return "";
-    }
-    const date = Date.parse(dateStr);
-    return new Date(date).toISOString().split("T")[1].split(".")[0];
-  };
-
   const handleDelete = () => {
     deleteParticipantMutation.mutate();
     setShowModal(false);
@@ -53,20 +37,19 @@ export const ParticipantCard = ({ participant, key }: Props) => {
   return (
     <>
       <div className="card" key={key}>
-        <S3Image
-          imageKey={participant.headshotKey}
-          token={getCookie() || ""}
-          cardImage
-        />
-        <div className="card-body">
+        <div className="card-header">
           <h5 className="card-title">{participant.name}</h5>
+        </div>
+        <S3Image imageKey={participant.headshotKey} token={getCookie() || ""} />
+        <div className="card-body">
+          <h5 className="card-text text-muted">ID: {participant.id}</h5>
           <p className="card-text">
             Date of Birth: {friendlyDate(participant.dob)}
-          </p>
-          <p className="card-text">
+            <br />
             Verification Status: {verificationIcon(participant)}
             {participant.Verification?.status}
           </p>
+
           <p className="card-text text-muted">
             Last Updated: {friendlyDate(participant.updatedAt)}{" "}
             {friendlyTime(participant.updatedAt)}
@@ -75,6 +58,8 @@ export const ParticipantCard = ({ participant, key }: Props) => {
             {friendlyDate(participant.Verification?.updatedAt || "")}{" "}
             {friendlyTime(participant.Verification?.updatedAt || "")}
           </p>
+        </div>
+        <div className="card-footer">
           <div className="d-flex flex-row">
             <button
               className="btn btn-primary me-1"
