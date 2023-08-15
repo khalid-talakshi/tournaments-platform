@@ -1,0 +1,145 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "darwin-arm64", "linux-arm64-openssl-1.1.x", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+model Coach {
+  id            Int          @id @default(autoincrement())
+  certification String?      @db.VarChar(255)
+  createdAt     DateTime     @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
+  TeamId        Int?
+  participantId Int          @db.Integer
+  Team          Team?        @relation(fields: [TeamId], references: [id], map: "Coaches_ibfk_1", onDelete: Cascade)
+  Participant   Participant  @relation(fields: [participantId], references: [id], map: "Coaches_ibfk_2")
+
+  @@index([participantId], map: "participantIdIndex")
+  @@index([TeamId], map: "TeamIdIndex")
+}
+
+model Match {
+  id            Int      @id @default(autoincrement())
+  homeTeamId    Int?
+  awayTeamId    Int?
+  homeTeamScore Int      @default(0)
+  awayTeamScore Int      @default(0)
+  createdAt     DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime @updatedAt @db.Timestamptz(0)
+  field         String?  @db.VarChar(255)
+  gameType      String?  @db.VarChar(255)
+  venue         String?  @db.VarChar(255)
+  category      String?  @db.VarChar(255)
+  HomeTeam      Team?    @relation("Matches_homeTeamIdToTeams", fields: [homeTeamId], references: [id], onDelete: NoAction, map: "Matches_ibfk_1")
+  AwayTeam      Team?    @relation("Matches_awayTeamIdToTeams", fields: [awayTeamId], references: [id], onDelete: NoAction, map: "Matches_ibfk_2")
+
+  @@index([awayTeamId], map: "awayTeamId")
+  @@index([homeTeamId], map: "homeTeamId")
+}
+
+model Participant {
+  id             Int          @id @default(autoincrement())
+  name           String       @db.VarChar(255)
+  dob            DateTime     @db.Date
+  createdAt      DateTime     @default(now()) @db.Timestamptz(0)
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(0)
+  userId         Int          @db.Integer
+  phoneNumber    String       @db.VarChar(255)
+  email          String       @db.VarChar(255)
+  parentEmail    String?      @db.VarChar(255)
+  headshotKey    String?      @db.VarChar(255)
+  photoIdKey     String?      @db.VarChar(255)
+  waiverKey      String?      @db.VarChar(255)
+  gender         String       @db.VarChar(255)
+  verificationId Int?         @db.Integer
+  User           User         @relation(fields: [userId], references: [id], map: "user_relation")
+  Coaches        Coach[]
+  Players        Player[]
+  Verification   Verification?
+
+  @@unique([name, userId], name: "userId_name")
+  @@index([userId], map: "Participant_userId_fkey")
+}
+
+model Player {
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime    @updatedAt @db.Timestamptz(0)
+  teamId        Int?
+  jerseyNumber  Int         @default(0)
+  participantId Int         @db.Integer
+  Team          Team?       @relation(fields: [teamId], references: [id], map: "Players_ibfk_1", onDelete: Cascade)
+  Participant   Participant @relation(fields: [participantId], references: [id], map: "Players_ibfk_2")
+
+  @@unique([participantId, teamId], name: "ParticipantId_TeamId")
+  @@index([participantId], map: "participantId")
+  @@index([teamId], map: "TeamId")
+  @@unique([jerseyNumber, teamId], name: "jerseyNumber_teamId")
+}
+
+model Team {
+  id            Int          @id @default(autoincrement())
+  teamName      String?      @db.VarChar(255)
+  createdAt     DateTime     @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
+  categoryId    Int?
+  password      String       @db.VarChar(255)
+  teamManagerId Int?
+  TeamManager   TeamManager? @relation("Teams_teamManagerIdToParticipants", fields: [teamManagerId], references: [id], map: "Teams_ibfk_1", onDelete: Cascade)
+  Coaches       Coach[]
+  HomeMatches   Match[]      @relation("Matches_homeTeamIdToTeams")
+  AwayMatches   Match[]      @relation("Matches_awayTeamIdToTeams")
+  Players       Player[]
+  Category      Category?    @relation(fields: [categoryId], references: [id], map: "category_relation")
+
+  @@unique([categoryId, teamName], name: "category_teamName")
+  @@index([teamManagerId], map: "teamManagerId")
+}
+
+model TeamManager {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
+  firstName String?  @db.VarChar(255)
+  lastName  String?  @db.VarChar(255)
+  dob       DateTime @db.Date
+  userId    Int      @unique @db.Integer
+  headshot  String?  @db.VarChar(255)
+  User      User     @relation(fields: [userId], references: [id])
+  Teams     Team[]   @relation("Teams_teamManagerIdToParticipants")
+}
+
+model User {
+  id          Int           @id @default(autoincrement()) @db.Integer
+  username    String?       @unique @db.VarChar(255)
+  password    String?       @db.VarChar(255)
+  permission  String?       @db.VarChar(255)
+  Participant Participant[]
+  TeamManager TeamManager?
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
+  minAge    Int?
+  maxAge    Int?
+  female    Boolean? @default(false)
+  Teams     Team[]
+}
+
+model Verification {
+  id            Int           @id @default(autoincrement())
+  createdAt     DateTime      @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime      @updatedAt @db.Timestamptz(0)
+  status        String
+  participantId Int @unique
+  reason        String?
+  Participant   Participant   @relation(fields: [participantId], references: [id], map: "Participant_verificationId_fkey", onDelete: Cascade)
+}

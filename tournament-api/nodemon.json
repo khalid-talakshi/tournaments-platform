@@ -1,0 +1,7 @@
+{
+  "watch": ["index.js", "db/", "prisma/"],
+  "ext": "js, css",
+  "execMap": {
+    "ts": "ts-node"
+  }
+}

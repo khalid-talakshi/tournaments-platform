@@ -1,0 +1,51 @@
+{
+  "name": "tournament-api",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "yarn build && prisma generate --schema ./prisma/schema.prisma && prisma migrate deploy && prisma db seed && nodemon --watch prisma --watch middleware --watch helpers --watch index.js --watch config ./index.js --watch routes",
+    "build": "tsc",
+    "start": "prisma generate --schema ./prisma/schema.prisma && prisma migrate deploy && prisma db seed && tsc && nodemon --watch prisma --watch middleware --watch helpers --watch routes --watch types --watch index.ts --watch app.ts --watch config ./index.ts",
+    "test": "dotenv -e .env.test -- prisma migrate reset --force && dotenv -e .env.test -- jest --watchAll"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.5.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.14",
+    "@types/jest": "^29.2.0",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/mock-aws-s3": "^2.6.3",
+    "@types/multer": "^1.4.7",
+    "@types/papaparse": "^5.3.5",
+    "@types/supertest": "^2.0.12",
+    "@aws-sdk/client-s3": "^3.32.0",
+    "aws-sdk": "^2.1213.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "dotenv-cli": "^6.0.0",
+    "express": "^4.18.1",
+    "jest": "^29.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "mock-aws-s3": "^4.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.19",
+    "papaparse": "^5.3.2",
+    "prisma": "^5.1.0",
+    "supertest": "^6.3.0",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts",
+    "test-seed": "ts-node prisma/seed.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.0"
+  }
+}
