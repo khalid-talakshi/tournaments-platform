@@ -4,6 +4,8 @@ import { useCookie } from "../../hooks";
 import { isUserError, TeamManager } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { S3Image } from "../S3Image";
+import { useState } from "react";
+import { Alert, Modal } from "react-bootstrap";
 
 export const TeamManagerTab = () => {
   const { cookie } = useCookie("token");
@@ -20,9 +22,13 @@ export const TeamManagerTab = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["team-manager"] });
+        queryClient.invalidateQueries({ queryKey: ["teams"] });
+        queryClient.invalidateQueries({ queryKey: ["players"] });
+        queryClient.invalidateQueries({ queryKey: ["coaches"] });
       },
     }
   );
+  const [showModal, setShowModal] = useState(false);
 
   const noTeamManagerMarkup = (
     <>
@@ -79,7 +85,7 @@ export const TeamManagerTab = () => {
           </button>
           <button
             className="btn btn-danger"
-            onClick={() => deleteTeamManagerMutation.mutate()}
+            onClick={() => setShowModal(true)}
             disabled={deleteTeamManagerMutation.isLoading}
           >
             {deleteTeamManagerMutation.isLoading && (
@@ -112,6 +118,53 @@ export const TeamManagerTab = () => {
     <div>
       <h2>Team Manager</h2>
       {teamManagerMarkup()}
+      <Modal show={showModal} setShow={setShowModal}>
+        <Modal.Header>
+          <Modal.Title>Delete Team Manager?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Alert variant="danger">
+            <p>Deleting your Team Manager profile will:</p>
+            <ul>
+              <li>Delete all teams you have created</li>
+              <li>Remove your field access for all teams you have created</li>
+              <li>
+                Remove your ability to create teams in the future without
+                creating a new Team Manager profile
+              </li>
+            </ul>
+            <p>
+              If you are sure you want to delete your Team Manager profile,
+              click "Delete Profile" below
+            </p>
+          </Alert>
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowModal(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              deleteTeamManagerMutation.mutate();
+              setShowModal(false);
+            }}
+            disabled={deleteTeamManagerMutation.isLoading}
+          >
+            {deleteTeamManagerMutation.isLoading && (
+              <span
+                className="spinner-grow spinner-grow-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            )}
+            Delete Profile
+          </button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

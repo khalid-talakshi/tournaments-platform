@@ -14,16 +14,16 @@ import { useNavigate } from "react-router-dom";
 
 export interface Props {
   team?: Team;
+  setError?: (error: string | null) => void;
 }
 
-export const TeamForm = ({ team }: Props) => {
+export const TeamForm = ({ team, setError }: Props) => {
   console.log(team);
   const [divivsion, setDivision] = useState<TeamCategory>(
     StringToDivision(team?.Category?.code || "") || AllDivisions[0]
   );
   const [teamName, setTeamName] = useState<string>(team?.teamName || "");
   const [password, setPassword] = useState<string>(team?.password || "");
-  const [error, setError] = useState<string | null>(null);
 
   console.log(divivsion);
   console.log(teamName);
@@ -46,8 +46,8 @@ export const TeamForm = ({ team }: Props) => {
     (data: TeamPayload) => createTeam(data, getCookie() || ""),
     {
       onSuccess: (data) => {
-        if (data.error) {
-          setError(data.error.message);
+        if (data.message && setError) {
+          setError(data.message);
         } else {
           navigate("/dashboard?tab=teams");
         }
@@ -60,7 +60,7 @@ export const TeamForm = ({ team }: Props) => {
     (data: TeamPayload) => updateTeam(team!.id, data, getCookie() || ""),
     {
       onSuccess: (data) => {
-        if (data.error) {
+        if (data.message && setError) {
           setError(data.error.message);
         } else {
           console.log(data);
@@ -88,8 +88,6 @@ export const TeamForm = ({ team }: Props) => {
       });
     }
   };
-
-  console.log(error);
 
   return (
     <form onSubmit={handleSubmit}>

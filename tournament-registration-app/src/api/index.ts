@@ -22,3 +22,5 @@ export { updatePlayer } from "./updatePlayer";
 export { getCoaches } from "./getCoaches";
 export { createCoach } from "./createCoach";
 export { deleteCoach } from "./deleteCoach";
+export { getTeamStatus } from "./getTeamStatus";
+export { updateTeamPassword } from "./updateTeamPassword";
