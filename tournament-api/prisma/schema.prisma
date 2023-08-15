@@ -89,7 +89,7 @@ model Team {
   categoryId    Int?
   password      String       @db.VarChar(255)
   teamManagerId Int?
-  TeamManager   TeamManager? @relation("Teams_teamManagerIdToParticipants", fields: [teamManagerId], references: [id], map: "Teams_ibfk_1")
+  TeamManager   TeamManager? @relation("Teams_teamManagerIdToParticipants", fields: [teamManagerId], references: [id], map: "Teams_ibfk_1", onDelete: Cascade)
   Coaches       Coach[]
   HomeMatches   Match[]      @relation("Matches_homeTeamIdToTeams")
   AwayMatches   Match[]      @relation("Matches_awayTeamIdToTeams")
