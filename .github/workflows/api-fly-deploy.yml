@@ -6,6 +6,10 @@ on:
       - main
     paths:
       - "tournament-api/**"
+      
+defaults:
+  run:
+    working-directory: ./tournament-api
 
 jobs:
   deploy:
