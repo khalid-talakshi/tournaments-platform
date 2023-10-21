@@ -9,6 +9,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { Container, Theme, ThemePanel } from "@radix-ui/themes";
+import * as Navbar from "@radix-ui/react-navigation-menu";
 
 import stylesheet from "~/tailwind.css";
 import radixStylesheet from "@radix-ui/themes/styles.css";
@@ -30,6 +31,13 @@ export default function App() {
       </head>
       <body>
         <Theme>
+          <Navbar.Root>
+            <Navbar.List className="flex">
+              <Navbar.Item>Home</Navbar.Item>
+              <Navbar.Item>Home</Navbar.Item>
+              <Navbar.Item>Home</Navbar.Item>
+            </Navbar.List>
+          </Navbar.Root>
           <Container>
             <Outlet />
           </Container>
