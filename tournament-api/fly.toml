@@ -12,6 +12,18 @@ swap_size_mb = 512
 [deploy]
   release_command = "yarn prisma migrate deploy"
 
+[checks]
+  [checks.health_check_http]
+    grace_period = "30s"
+    interval = "15s"
+    method = "get"
+    path = "/health-check"
+    port = 8080
+    timeout = "10s"
+    type = "http"
+    [checks.health_check_http.headers]
+      Content-Type = "application/json"
+
 [http_service]
   internal_port = 3000
   force_https = true

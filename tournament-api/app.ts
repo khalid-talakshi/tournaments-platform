@@ -32,6 +32,10 @@ categoryRoutes(app);
 coachesRoutes(app);
 imageRoutes(app);
 
+app.get("/health-check", (req, res) => {
+  res.status(200).json({ message: "Server is running" });
+});
+
 // app.get("/match/:id", async (req, res) => {
 //   try {
 //     const matchId = req.params.id;
