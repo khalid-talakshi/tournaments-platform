@@ -6,13 +6,12 @@ on:
       - main
     paths:
       - "tournament-api/**"
-      
-defaults:
-  run:
-    working-directory: ./tournament-api
 
 jobs:
   deploy:
+    defaults:
+      run:
+        working-directory: ./tournament-api
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
