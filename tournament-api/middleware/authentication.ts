@@ -12,6 +12,7 @@ export const authenticate = (
       "/register",
       "/parse-data",
       "/health-check",
+      "/db-health-check",
     ];
     if (nonSecurePaths.includes(req.path)) return next();
     const appSecret = process.env.APP_SECRET;

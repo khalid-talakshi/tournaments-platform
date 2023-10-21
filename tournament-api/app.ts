@@ -13,6 +13,7 @@ import {
   coachesRoutes,
   imageRoutes,
 } from "./routes";
+import { prisma } from "prisma";
 
 dotenv.config();
 
@@ -34,6 +35,15 @@ imageRoutes(app);
 
 app.get("/health-check", (req, res) => {
   res.status(200).json({ message: "Server is running" });
+});
+
+app.get("/db-health-check", async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).json({ message: "Database is connected" });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // app.get("/match/:id", async (req, res) => {
