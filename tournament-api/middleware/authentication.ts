@@ -7,7 +7,12 @@ export const authenticate = (
   next: NextFunction
 ) => {
   try {
-    const nonSecurePaths = ["/login", "/register", "/parse-data"];
+    const nonSecurePaths = [
+      "/login",
+      "/register",
+      "/parse-data",
+      "/health-check",
+    ];
     if (nonSecurePaths.includes(req.path)) return next();
     const appSecret = process.env.APP_SECRET;
     const authHeader = req.headers.authorization;

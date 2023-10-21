@@ -1,0 +1,33 @@
+# fly.toml app configuration file generated for tournament-api on 2023-10-21T15:04:05-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "tournament-api"
+primary_region = "yyz"
+swap_size_mb = 512
+
+[build]
+
+[deploy]
+  release_command = "yarn prisma migrate deploy"
+
+[checks]
+  [checks.health_check_http]
+    grace_period = "30s"
+    interval = "15s"
+    method = "get"
+    path = "/health-check"
+    port = 8080
+    timeout = "10s"
+    type = "http"
+    [checks.health_check_http.headers]
+      Content-Type = "application/json"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
