@@ -13,7 +13,7 @@ import {
   coachesRoutes,
   imageRoutes,
 } from "./routes";
-import { prisma } from "prisma";
+import { prisma } from "./prisma";
 
 dotenv.config();
 
