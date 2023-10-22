@@ -8,11 +8,10 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { Container, Theme, ThemePanel } from "@radix-ui/themes";
-import * as Navbar from "@radix-ui/react-navigation-menu";
 
 import stylesheet from "~/tailwind.css";
 import radixStylesheet from "@radix-ui/themes/styles.css";
+import { NavSidebar } from "./components";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -22,30 +21,23 @@ export const links: LinksFunction = () => [
 
 export default function App() {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
-        <Theme>
-          <Navbar.Root>
-            <Navbar.List className="flex">
-              <Navbar.Item>Home</Navbar.Item>
-              <Navbar.Item>Home</Navbar.Item>
-              <Navbar.Item>Home</Navbar.Item>
-            </Navbar.List>
-          </Navbar.Root>
-          <Container>
-            <Outlet />
-          </Container>
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
-          <ThemePanel />
-        </Theme>
+      <body className="bg-slate-900 text-white flex font-display">
+        <div className="bg-slate-800 h-screen inset-y-0 left-0 w-56 space-y-2">
+          <NavSidebar />
+        </div>
+        <div className="container mx-auto mt-2 max-w-6xl">
+          <Outlet />
+        </div>
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
       </body>
     </html>
   );
