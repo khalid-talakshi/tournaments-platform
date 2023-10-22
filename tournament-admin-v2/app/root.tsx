@@ -10,13 +10,11 @@ import {
 } from "@remix-run/react";
 
 import stylesheet from "~/tailwind.css";
-import radixStylesheet from "@radix-ui/themes/styles.css";
 import { NavSidebar } from "./components";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   { rel: "stylesheet", href: stylesheet },
-  { rel: "stylesheet", href: radixStylesheet },
 ];
 
 export default function App() {
