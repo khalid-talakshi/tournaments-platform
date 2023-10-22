@@ -3,9 +3,12 @@ import radixPlugin from "tailwindcss-radix";
 
 export default {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
-  darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        display: "IBM Plex Sans, ui-sans-serif",
+      },
+    },
   },
   plugins: [radixPlugin],
 } satisfies Config;
