@@ -1,6 +1,7 @@
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native", "darwin-arm64", "linux-arm64-openssl-1.1.x", "debian-openssl-1.1.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64", "linux-arm64-openssl-1.1.x", "debian-openssl-1.1.x"]
+  engineType    = "binary"
 }
 
 datasource db {
@@ -9,14 +10,14 @@ datasource db {
 }
 
 model Coach {
-  id            Int          @id @default(autoincrement())
-  certification String?      @db.VarChar(255)
-  createdAt     DateTime     @default(now()) @db.Timestamptz(0)
-  updatedAt     DateTime     @updatedAt @db.Timestamptz(0)
+  id            Int         @id @default(autoincrement())
+  certification String?     @db.VarChar(255)
+  createdAt     DateTime    @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime    @updatedAt @db.Timestamptz(0)
   TeamId        Int?
-  participantId Int          @db.Integer
-  Team          Team?        @relation(fields: [TeamId], references: [id], map: "Coaches_ibfk_1", onDelete: Cascade)
-  Participant   Participant  @relation(fields: [participantId], references: [id], map: "Coaches_ibfk_2")
+  participantId Int         @db.Integer
+  Team          Team?       @relation(fields: [TeamId], references: [id], map: "Coaches_ibfk_1", onDelete: Cascade)
+  Participant   Participant @relation(fields: [participantId], references: [id], map: "Coaches_ibfk_2")
 
   @@index([participantId], map: "participantIdIndex")
   @@index([TeamId], map: "TeamIdIndex")
@@ -42,21 +43,21 @@ model Match {
 }
 
 model Participant {
-  id             Int          @id @default(autoincrement())
-  name           String       @db.VarChar(255)
-  dob            DateTime     @db.Date
-  createdAt      DateTime     @default(now()) @db.Timestamptz(0)
-  updatedAt      DateTime     @updatedAt @db.Timestamptz(0)
-  userId         Int          @db.Integer
-  phoneNumber    String       @db.VarChar(255)
-  email          String       @db.VarChar(255)
-  parentEmail    String?      @db.VarChar(255)
-  headshotKey    String?      @db.VarChar(255)
-  photoIdKey     String?      @db.VarChar(255)
-  waiverKey      String?      @db.VarChar(255)
-  gender         String       @db.VarChar(255)
-  verificationId Int?         @db.Integer
-  User           User         @relation(fields: [userId], references: [id], map: "user_relation")
+  id             Int           @id @default(autoincrement())
+  name           String        @db.VarChar(255)
+  dob            DateTime      @db.Date
+  createdAt      DateTime      @default(now()) @db.Timestamptz(0)
+  updatedAt      DateTime      @updatedAt @db.Timestamptz(0)
+  userId         Int           @db.Integer
+  phoneNumber    String        @db.VarChar(255)
+  email          String        @db.VarChar(255)
+  parentEmail    String?       @db.VarChar(255)
+  headshotKey    String?       @db.VarChar(255)
+  photoIdKey     String?       @db.VarChar(255)
+  waiverKey      String?       @db.VarChar(255)
+  gender         String        @db.VarChar(255)
+  verificationId Int?          @db.Integer
+  User           User          @relation(fields: [userId], references: [id], map: "user_relation")
   Coaches        Coach[]
   Players        Player[]
   Verification   Verification?
@@ -76,9 +77,9 @@ model Player {
   Participant   Participant @relation(fields: [participantId], references: [id], map: "Players_ibfk_2")
 
   @@unique([participantId, teamId], name: "ParticipantId_TeamId")
+  @@unique([jerseyNumber, teamId], name: "jerseyNumber_teamId")
   @@index([participantId], map: "participantId")
   @@index([teamId], map: "TeamId")
-  @@unique([jerseyNumber, teamId], name: "jerseyNumber_teamId")
 }
 
 model Team {
@@ -135,11 +136,11 @@ model Category {
 }
 
 model Verification {
-  id            Int           @id @default(autoincrement())
-  createdAt     DateTime      @default(now()) @db.Timestamptz(0)
-  updatedAt     DateTime      @updatedAt @db.Timestamptz(0)
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime    @updatedAt @db.Timestamptz(0)
   status        String
-  participantId Int @unique
+  participantId Int         @unique
   reason        String?
-  Participant   Participant   @relation(fields: [participantId], references: [id], map: "Participant_verificationId_fkey", onDelete: Cascade)
+  Participant   Participant @relation(fields: [participantId], references: [id], map: "Participant_verificationId_fkey", onDelete: Cascade)
 }

@@ -43,6 +43,8 @@ app.get("/db-health-check", async (req, res) => {
     res.status(200).json({ message: "Database is connected" });
   } catch (e) {
     res.status(500).json({ error: e.message });
+  } finally {
+    await prisma.$disconnect();
   }
 });
 
