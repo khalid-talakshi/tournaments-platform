@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { PageTitle } from "~/components";
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,7 +11,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Verification</h1>{" "}
+      <PageTitle>Verification</PageTitle>
     </>
   );
 }
