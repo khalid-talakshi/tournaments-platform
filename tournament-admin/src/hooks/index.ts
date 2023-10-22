@@ -1,1 +1,0 @@
-export { useCookie } from "./useCookie";
