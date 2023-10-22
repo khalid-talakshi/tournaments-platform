@@ -1,5 +1,4 @@
 import * as Navbar from "@radix-ui/react-navigation-menu";
-import { HomeIcon } from "@radix-ui/react-icons";
 import { AiFillHome, AiFillCheckCircle } from "react-icons/ai/index.js";
 import { Link, useLocation } from "@remix-run/react";
 
@@ -32,7 +31,7 @@ export const NavSidebar = () => {
           {navbarItems.map((item) => {
             return (
               <Navbar.Item
-                className={`rounded text-lg py-1 px-2 space-x-2 hover:bg-slate-600 hover:cursor-pointer ${
+                className={`rounded text-lg py-1 px-2 space-x-2 transition-colors ease-in-out hover:bg-slate-600 hover:cursor-pointer ${
                   location.pathname == item.to ? "bg-slate-600" : "bg-slate-700"
                 } `}
               >
