@@ -13,6 +13,9 @@ concurrency:
 
 jobs:
   lint:
+    defaults:
+      run:
+        working-directory: ./tournament-admin-v2
     name: ⬣ Lint
     runs-on: ubuntu-latest
     steps:
