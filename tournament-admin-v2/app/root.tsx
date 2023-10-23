@@ -27,7 +27,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-slate-900 text-white flex font-display">
-        <div className="bg-slate-800 h-screen inset-y-0 left-0 w-56 space-y-2">
+        <div className="bg-slate-800 h-screen inset-y-0 left-0 w-60 space-y-2">
           <NavSidebar />
         </div>
         <div className="container mx-auto mt-2 max-w-6xl">
