@@ -1,8 +1,6 @@
 import { redirect } from "@remix-run/node";
 import { tokenCookie } from "~/cookies.server";
 
-type ResFunction = () => any;
-
 export const verifyCookie = async (request: Request) => {
   console.log("verifyCookie");
   const cookieHeader = request.headers.get("Cookie");

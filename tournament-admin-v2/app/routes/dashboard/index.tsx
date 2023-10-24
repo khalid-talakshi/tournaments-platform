@@ -1,11 +1,5 @@
-import {
-  LoaderFunction,
-  redirect,
-  type MetaFunction,
-  json,
-} from "@remix-run/node";
+import { LoaderFunction, type MetaFunction, json } from "@remix-run/node";
 import { Card, PageTitle } from "~/components";
-import { tokenCookie } from "~/cookies.server";
 import { verifyCookie } from "~/utils";
 
 export const meta: MetaFunction = () => {
