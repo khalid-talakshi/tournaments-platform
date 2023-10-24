@@ -13,6 +13,7 @@ export const authenticate = (
       "/parse-data",
       "/health-check",
       "/db-health-check",
+      "/admin/verify",
     ];
     if (nonSecurePaths.includes(req.path)) return next();
     const appSecret = process.env.APP_SECRET;
