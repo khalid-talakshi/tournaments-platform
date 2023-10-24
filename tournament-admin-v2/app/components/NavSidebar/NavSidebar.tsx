@@ -1,5 +1,5 @@
 import * as Navbar from "@radix-ui/react-navigation-menu";
-import { AiFillHome, AiFillCheckCircle } from "react-icons/ai/index.js";
+import { AiFillHome, AiOutlineTeam } from "react-icons/ai/index.js";
 import { Link, useLocation } from "@remix-run/react";
 
 export const NavSidebar = () => {
@@ -10,9 +10,9 @@ export const NavSidebar = () => {
       to: "/dashboard",
     },
     {
-      text: "Verification",
-      icon: <AiFillCheckCircle />,
-      to: "/verification",
+      text: "Participants",
+      icon: <AiOutlineTeam />,
+      to: "/participants",
     },
   ];
 
