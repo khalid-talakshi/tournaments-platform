@@ -2,7 +2,7 @@ import { Express } from "express";
 import { prisma } from "../prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { ErrorCode, UserError } from "../types";
+import { ErrorCode, UserError, UserTokenPayload } from "../types";
 
 export const loginRoutes = (app: Express) => {
   app.post("/login", async (req, res) => {
@@ -33,6 +33,23 @@ export const loginRoutes = (app: Express) => {
         <string>process.env.APP_SECRET
       );
       res.status(200).json({ token });
+    } catch (e) {
+      console.log(e);
+      res.status(401).json({ error: e.message });
+    }
+  });
+
+  app.post("/admin/verify", async (req, res) => {
+    try {
+      const { token } = req.body;
+      const { permission } = jwt.verify(
+        token,
+        <string>process.env.APP_SECRET
+      ) as UserTokenPayload;
+      if (permission !== "ADMIN") {
+        throw Error("No Admin Permissions");
+      }
+      res.status(200).json({ verified: true });
     } catch (e) {
       console.log(e);
       res.status(401).json({ error: e.message });

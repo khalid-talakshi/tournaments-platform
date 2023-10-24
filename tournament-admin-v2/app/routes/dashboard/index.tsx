@@ -1,11 +1,24 @@
-import type { MetaFunction } from "@remix-run/node";
+import {
+  LoaderFunction,
+  redirect,
+  type MetaFunction,
+  json,
+} from "@remix-run/node";
 import { Card, PageTitle } from "~/components";
+import { tokenCookie } from "~/cookies.server";
+import { verifyCookie } from "~/utils";
 
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const resFunction = await verifyCookie(request);
+  if (resFunction) return resFunction;
+  return json({});
 };
 
 export default function Index() {
