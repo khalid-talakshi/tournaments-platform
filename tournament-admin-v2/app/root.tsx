@@ -1,6 +1,7 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
 import { type LinksFunction } from "@remix-run/node";
 import {
+  Form,
   Links,
   LiveReload,
   Meta,
@@ -12,6 +13,7 @@ import {
 
 import stylesheet from "~/tailwind.css";
 import { NavSidebar } from "./components";
+import { AiOutlineLogout } from "react-icons/ai/index.js";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -28,8 +30,17 @@ export default function App() {
       default:
         return (
           <>
-            <div className="bg-slate-800 h-screen inset-y-0 left-0 w-60 space-y-2">
+            <div className="bg-slate-800 h-screen inset-y-0 left-0 w-60 space-y-2 flex flex-col justify-between">
               <NavSidebar />
+              <Form method="post" action="/logout">
+                <button
+                  className="h-12 bg-slate-500 text-lg px-2 flex justify-left items-center space-x-2 w-full"
+                  type="submit"
+                >
+                  <AiOutlineLogout />
+                  <p>Logout</p>
+                </button>
+              </Form>
             </div>
             <div className="container mx-auto mt-2 max-w-6xl">
               <Outlet />

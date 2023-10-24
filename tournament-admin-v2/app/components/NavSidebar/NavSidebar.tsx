@@ -21,7 +21,7 @@ export const NavSidebar = () => {
   console.log(location.pathname);
 
   return (
-    <>
+    <div>
       <div className="flex items-center text-2xl font-semibold space-x-2 py-2 px-2">
         <img src="gc-logo.png" alt="gc-logo" className="w-10" />
         <p>Gold Cup</p>
@@ -46,6 +46,6 @@ export const NavSidebar = () => {
           })}
         </Navbar.List>
       </Navbar.Root>
-    </>
+    </div>
   );
 };
