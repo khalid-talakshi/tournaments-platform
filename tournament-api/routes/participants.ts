@@ -428,4 +428,16 @@ export const participantRoutes = (app: Express) => {
       res.status(200).json(verification);
     } catch (e) {}
   });
+
+  app.get("/participants/all", authenticateAdmin, async (req, res) => {
+    const participants = await prisma.participant.findMany({
+      select: {
+        id: true,
+        name: true,
+        Verification: { select: { status: true } },
+        updatedAt: true,
+      },
+    });
+    res.status(200).json(participants);
+  });
 };
