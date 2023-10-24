@@ -23,6 +23,16 @@ swap_size_mb = 512
     type = "http"
     [checks.health_check_http.headers]
       Content-Type = "application/json"
+  [checks.db_health_check]
+    grace_period = "30s"
+    interval = "15s"
+    method = "get"
+    path = "/db-health-check"
+    port = 8080
+    timeout = "10s"
+    type = "http"
+    [checks.db_health_check.headers]
+      Content-Type = "application/json"
 
 [http_service]
   internal_port = 8080
