@@ -11,7 +11,11 @@ export const loader: LoaderFunction = async ({
   const verify = await axios.post(`${process.env.API_URL}/admin/verify`, {
     token: cookie.token,
   });
-  if (!verify.data.verified) return redirect("/login");
+  if (!verify.data.verified) {
+    return redirect("/login", {
+      headers: { "Set-Cookie": await tokenCookie.serialize({}) },
+    });
+  }
   cookie.verified = true;
   return redirect("/dashboard", {
     headers: { "Set-Cookie": await tokenCookie.serialize(cookie) },

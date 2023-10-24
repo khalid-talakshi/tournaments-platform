@@ -1,8 +1,22 @@
-import { ActionFunctionArgs, createCookie, redirect } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunction,
+  createCookie,
+  redirect,
+} from "@remix-run/node";
 import { Form, useNavigation } from "@remix-run/react";
 import { Card, PageTitle } from "~/components";
 import { tokenCookie } from "~/cookies.server";
 import axios from "axios";
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const cookieHeader = request.headers.get("Cookie");
+  const cookie = await tokenCookie.parse(cookieHeader);
+  if (cookie && cookie.token) {
+    return redirect("/");
+  }
+  return {};
+};
 
 export default function Index() {
   const navigation = useNavigation();
