@@ -440,4 +440,18 @@ export const participantRoutes = (app: Express) => {
     });
     res.status(200).json(participants);
   });
+
+  app.get("/admin/participant/:id", authenticateAdmin, async (req, res) => {
+    const { id } = req.params;
+    const participantId = parseInt(id);
+    const participant = await prisma.participant.findUnique({
+      where: {
+        id: participantId,
+      },
+      include: {
+        Verification: true,
+      },
+    });
+    res.status(200).json(participant);
+  });
 };
