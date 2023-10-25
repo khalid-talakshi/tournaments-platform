@@ -1,12 +1,35 @@
-import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import {
+  isRouteErrorResponse,
+  useLoaderData,
+  useRouteError,
+} from "@remix-run/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
+import { LoaderFunction, json } from "@remix-run/node";
+import axios from "axios";
+import { verifyCookie } from "~/utils";
+import { tokenCookie } from "~/cookies.server";
+
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const verifyRes = await verifyCookie(request);
+  if (verifyRes) return verifyRes;
+
+  const cookie = await tokenCookie.parse(request.headers.get("Cookie"));
+
+  console.log(
+    `${process.env.API_URL}/admin/participant/${params.id}/attachments`
+  );
+
+  const { data } = await axios.get(
+    `${process.env.API_URL}/admin/participant/${params.id}/attachments`,
+    {
+      headers: { Authorization: `Bearer ${cookie.token}` },
+    }
+  );
+  return json(data);
+};
 
 export default function Index() {
-  console.log("test");
-
-  const tags = Array.from({ length: 50 }).map(
-    (_, i, a) => `v1.2.0-beta.${a.length - i}`
-  );
+  const tags = useLoaderData<any[]>();
 
   return (
     <div className="space-y-1">
@@ -19,7 +42,7 @@ export default function Index() {
                 key={i}
                 className="bg-slate-800 my-2 rounded text-lg p-2 hover:bg-slate-700"
               >
-                {v}
+                {v.name}
               </div>
             ))}
           </ScrollArea.Viewport>
@@ -41,7 +64,7 @@ export function ErrorBoundary() {
 
   if (isRouteErrorResponse(error)) {
     return (
-      <div>
+      <div className="w-fit">
         <h1>
           {error.status} {error.statusText}
         </h1>
@@ -50,7 +73,7 @@ export function ErrorBoundary() {
     );
   } else if (error instanceof Error) {
     return (
-      <div>
+      <div className="w-full">
         <h1>Error</h1>
         <p>{error.message}</p>
         <p>The stack trace is:</p>

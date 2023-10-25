@@ -454,4 +454,25 @@ export const participantRoutes = (app: Express) => {
     });
     res.status(200).json(participant);
   });
+
+  app.get(
+    "/admin/participant/:id/attachments",
+    authenticateAdmin,
+    async (req, res) => {
+      const { id } = req.params;
+      const participantId = parseInt(id);
+      const participant = await prisma.participant.findUnique({
+        where: {
+          id: participantId,
+        },
+      });
+      // attachments for now will be photoId and waiver
+      const attachmentKeys = [
+        { name: "Photo ID", key: participant.photoIdKey },
+        { name: "Waiver", key: participant.waiverKey },
+      ];
+
+      return res.status(200).json(attachmentKeys);
+    }
+  );
 };
