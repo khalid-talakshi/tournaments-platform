@@ -42,7 +42,7 @@ export default function App() {
                 </button>
               </Form>
             </div>
-            <div className="container mx-auto mt-2 max-w-6xl">
+            <div className="container mx-5 mt-2 max-w-6xl">
               <Outlet />
             </div>
           </>
