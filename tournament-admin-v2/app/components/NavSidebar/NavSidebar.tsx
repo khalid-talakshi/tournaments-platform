@@ -1,6 +1,7 @@
 import * as Navbar from "@radix-ui/react-navigation-menu";
 import { AiFillHome, AiOutlineTeam } from "react-icons/ai/index.js";
 import { Link, useLocation } from "@remix-run/react";
+import logo from "~/assets/gc-logo.png";
 
 export const NavSidebar = () => {
   const navbarItems = [
@@ -23,7 +24,7 @@ export const NavSidebar = () => {
   return (
     <div>
       <div className="flex items-center text-2xl font-semibold space-x-2 py-2 px-2">
-        <img src="gc-logo.png" alt="gc-logo" className="w-10" />
+        <img src={logo} alt="gc-logo" className="w-10" />
         <p>Gold Cup</p>
       </div>
       <Navbar.Root>
