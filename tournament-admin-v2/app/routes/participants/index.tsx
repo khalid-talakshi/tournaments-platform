@@ -28,7 +28,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Index() {
   const loaderData = useLoaderData<any[]>();
   const navigate = useNavigate();
-  console.log(loaderData);
 
   const sampleRows = [
     { id: 1, name: "John Doe", status: "Verified", date: "June 1, 2021" },
@@ -66,7 +65,7 @@ export default function Index() {
                 <td>{formatter.format(Date.parse(row.updatedAt))}</td>
                 <td>
                   <button
-                    className="bg-sky-700 px-3 py-1 rounded-xl"
+                    className="bg-sky-600 px-3 py-1 rounded-xl transition ease-in-out hover:bg-sky-700"
                     onClick={() => navigate(`/participant/${row.id}`)}
                   >
                     View
