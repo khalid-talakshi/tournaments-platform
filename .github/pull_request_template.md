@@ -6,6 +6,6 @@ closes (insert issue)
 
 ## Tournament API
 
-## Tounament Registration App
+## Tournament Registration App
 
 ## Tournament Admin Dashboard

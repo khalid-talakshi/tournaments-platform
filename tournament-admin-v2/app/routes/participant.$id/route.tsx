@@ -12,6 +12,7 @@ import {
 import { Card } from "~/components";
 import { tokenCookie } from "~/cookies.server";
 import { verifyCookie } from "~/utils";
+import { AiOutlineArrowLeft } from "react-icons/ai/index.js";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const verifyRes = await verifyCookie(request);
@@ -39,6 +40,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export default function Participant() {
   const { data, headshot } = useLoaderData<any>();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const formatter = new Intl.DateTimeFormat("en-US", {
     timeZone: "UTC",
@@ -64,6 +66,13 @@ export default function Participant() {
 
   return (
     <div className="space-y-2 pt-4">
+      <Link
+        to="/participants"
+        className="underline flex space-y-4 items-center text-lg hover:text-slate-300 transition ease-in-out"
+      >
+        <AiOutlineArrowLeft />
+        Back
+      </Link>
       <Card>
         <div className="flex w-fill">
           <div className="w-1/2 space-y-2">
