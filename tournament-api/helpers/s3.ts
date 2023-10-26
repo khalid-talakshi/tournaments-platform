@@ -74,11 +74,18 @@ export const getObjectByKey = async (key: string) => {
     Key: key,
   };
 
+  let type: string;
+  if (getExtensionByName(key) === "pdf") {
+    type = "application/pdf";
+  } else {
+    type = `image/${getExtensionByName(key)}`;
+  }
+
   try {
     const result = await s3Client.send(new GetObjectCommand(getParams));
     const imageArray = await result.Body.transformToByteArray();
     const imageStr = Buffer.from(imageArray).toString("base64");
-    const imageURl = `data:image/${getExtensionByName(key)};base64,${imageStr}`;
+    const imageURl = `data:${type};base64,${imageStr}`;
     return imageURl;
   } catch (err) {
     throw new Error("getObjectError");

@@ -1,6 +1,9 @@
 import {
+  Link,
+  Outlet,
   isRouteErrorResponse,
   useLoaderData,
+  useLocation,
   useRouteError,
 } from "@remix-run/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -30,20 +33,36 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export default function Index() {
   const tags = useLoaderData<any[]>();
+  const location = useLocation();
+
+  console.log(`/${location.pathname.split("/").slice(1, 4).join("/")}`);
+
+  console.log("location", location.pathname);
+
+  tags.forEach((v) => {
+    v.to = `/${location.pathname.split("/").slice(1, 4).join("/")}/${v.name
+      .toLowerCase()
+      .replace(" ", "-")}`;
+  });
 
   return (
     <div className="space-y-1">
       <p className="text-2xl font-bold">Attachments</p>
-      <div>
+      <div className="flex">
         <ScrollArea.Root className="w-1/4 h-52">
           <ScrollArea.Viewport className="h-full w-full">
             {tags.map((v, i) => (
-              <div
-                key={i}
-                className="bg-slate-800 my-2 rounded text-lg p-2 hover:bg-slate-700"
-              >
-                {v.name}
-              </div>
+              <Link to={v.key} key={i}>
+                <div
+                  className={`my-2 rounded text-lg p-2 hover:bg-slate-800 ${
+                    location.pathname === v.to
+                      ? "bg-slate-800"
+                      : "bg-slate-700 "
+                  }`}
+                >
+                  {v.name}
+                </div>
+              </Link>
             ))}
           </ScrollArea.Viewport>
           <ScrollArea.Scrollbar
@@ -54,6 +73,9 @@ export default function Index() {
           </ScrollArea.Scrollbar>
           <ScrollArea.Corner className="bg-black-50" />
         </ScrollArea.Root>
+        <div className="w-3/4">
+          <Outlet context={{ tags }} />
+        </div>
       </div>
     </div>
   );
