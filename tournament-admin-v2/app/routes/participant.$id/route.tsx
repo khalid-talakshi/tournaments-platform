@@ -56,6 +56,7 @@ export default function Participant() {
   });
 
   const mainPath = `/${location.pathname.split("/").slice(1, 3).join("/")}`;
+  const tabPath = `/${location.pathname.split("/").slice(1, 4).join("/")}`;
 
   const tabs = [
     { name: "Verification", to: `${mainPath}/verify` },
@@ -129,8 +130,7 @@ export default function Participant() {
               <Link to={tab.to} className="w-full">
                 <div
                   className={`w-full text-center border transition ease-in-out border-slate-100 rounded text-lg hover:bg-slate-500 ${
-                    tab.to === location.pathname &&
-                    "bg-slate-800 border-slate-300"
+                    tab.to === tabPath && "bg-slate-800 border-slate-300"
                   }`}
                 >
                   {tab.name}
