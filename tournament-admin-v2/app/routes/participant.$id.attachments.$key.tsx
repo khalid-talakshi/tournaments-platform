@@ -22,8 +22,6 @@ export default function Index() {
     return key?.split(".")[1];
   };
 
-  console.log(getType());
-
   return (
     <div className="flex justify-center items-center h-full">
       {getType() === "pdf" ? (

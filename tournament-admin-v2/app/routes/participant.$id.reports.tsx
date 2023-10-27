@@ -1,7 +1,6 @@
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 
 export default function Index() {
-  console.log("test");
   return <div>Reports</div>;
 }
 
