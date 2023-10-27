@@ -42,7 +42,7 @@ const verificationSteps = [
 export default function Index() {
   const { verification } = useOutletContext<{ verification: any }>();
 
-  console.log(verification.reason);
+  const reasonsList = verification.reason.split(",");
 
   return (
     <>
@@ -60,7 +60,11 @@ export default function Index() {
           {verification.status === "DENIED" && (
             <p className="text-xl">
               <span className="font-bold">Current Feedback: </span>
-              {verification.reason}
+              <ul className="list-disc ml-5">
+                {reasonsList.map((reason: any) => {
+                  return <li>{reason}</li>;
+                })}
+              </ul>
             </p>
           )}
         </div>
