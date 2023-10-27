@@ -11,7 +11,7 @@ import {
 } from "@remix-run/react";
 import { Card } from "~/components";
 import { tokenCookie } from "~/cookies.server";
-import { verifyCookie } from "~/utils";
+import { UTCFormatter, localeFormatter, verifyCookie } from "~/utils";
 import { AiOutlineArrowLeft } from "react-icons/ai/index.js";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -40,20 +40,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export default function Participant() {
   const { data, headshot } = useLoaderData<any>();
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "UTC",
-  });
-
-  const localeFormatter = new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-  });
 
   const mainPath = `/${location.pathname.split("/").slice(1, 3).join("/")}`;
   const tabPath = `/${location.pathname.split("/").slice(1, 4).join("/")}`;
@@ -80,7 +66,7 @@ export default function Participant() {
             <p className="text-3xl font-bold">{data.name}</p>
             <p className="text-xl">
               <span className="font-bold">Date of Birth:</span>{" "}
-              {formatter.format(Date.parse(data.dob))}
+              {UTCFormatter.format(Date.parse(data.dob))}
             </p>
             <p className="text-xl">
               <span className="font-bold">Email:</span> {data.email}

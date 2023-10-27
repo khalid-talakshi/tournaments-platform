@@ -23,8 +23,6 @@ export default function Index() {
   const navigation = useNavigation();
   const actionData = useActionData<{ message: string }>();
 
-  console.log(actionData);
-
   return (
     <div className="flex justify-center items-center h-screen w-screen flex-col space-y-5">
       {actionData && (

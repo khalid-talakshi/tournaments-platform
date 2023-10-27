@@ -426,7 +426,10 @@ export const participantRoutes = (app: Express) => {
         },
       });
       res.status(200).json(verification);
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+      res.json({ error: e.message });
+    }
   });
 
   app.get("/participants/all", authenticateAdmin, async (req, res) => {

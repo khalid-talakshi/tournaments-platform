@@ -18,10 +18,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const cookie = await tokenCookie.parse(request.headers.get("Cookie"));
 
-  console.log(
-    `${process.env.API_URL}/admin/participant/${params.id}/attachments`
-  );
-
   const { data } = await axios.get(
     `${process.env.API_URL}/admin/participant/${params.id}/attachments`,
     {
@@ -34,10 +30,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export default function Index() {
   const tags = useLoaderData<any[]>();
   const location = useLocation();
-
-  console.log(`/${location.pathname.split("/").slice(1, 4).join("/")}`);
-
-  console.log("location", location.pathname);
 
   tags.forEach((v) => {
     v.to = `/${location.pathname.split("/").slice(1, 4).join("/")}/${v.name

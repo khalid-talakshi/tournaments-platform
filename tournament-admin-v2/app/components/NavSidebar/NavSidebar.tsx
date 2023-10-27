@@ -19,8 +19,6 @@ export const NavSidebar = () => {
 
   const location = useLocation();
 
-  console.log(location.pathname);
-
   return (
     <div>
       <div className="flex items-center text-2xl font-semibold space-x-2 py-2 px-2">
