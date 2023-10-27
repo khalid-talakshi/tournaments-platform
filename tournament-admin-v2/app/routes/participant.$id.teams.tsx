@@ -1,13 +1,13 @@
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import { AiOutlineBarChart } from "react-icons/ai/index.js";
+import { AiOutlineTeam } from "react-icons/ai/index.js";
 
 export default function Index() {
   return (
     <div className="w-full flex flex-col justify-center items-center text-xl border-dashed border-white border-2 rounded py-5">
       <div className="text-7xl">
-        <AiOutlineBarChart />
+        <AiOutlineTeam />
       </div>
-      The Reports Page is coming soon!
+      The Teams Page is coming soon!
     </div>
   );
 }
