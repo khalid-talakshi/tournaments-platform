@@ -110,7 +110,7 @@ export default function Participant() {
         </div>
       </Card>
       <Card>
-        <div className="flex flex-row space-x-2 justify-between ">
+        <div className="flex flex-row space-x-2 justify-between mb-2">
           {tabs.map((tab) => {
             return (
               <Link to={tab.to} className="w-full">
