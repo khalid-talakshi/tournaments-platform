@@ -433,12 +433,35 @@ export const participantRoutes = (app: Express) => {
   });
 
   app.get("/participants/all", authenticateAdmin, async (req, res) => {
+    const { verified, pending, denied } = req.query;
+
+    const verificationFilters = [];
+
+    if (verified === "true") {
+      verificationFilters.push(VerificationStatus.VERIFIED);
+    }
+
+    if (pending === "true") {
+      verificationFilters.push(VerificationStatus.PENDING);
+    }
+
+    if (denied === "true") {
+      verificationFilters.push(VerificationStatus.DENIED);
+    }
+
     const participants = await prisma.participant.findMany({
       select: {
         id: true,
         name: true,
         Verification: { select: { status: true } },
         updatedAt: true,
+      },
+      where: {
+        Verification: {
+          status: {
+            in: verificationFilters,
+          },
+        },
       },
     });
     res.status(200).json(participants);

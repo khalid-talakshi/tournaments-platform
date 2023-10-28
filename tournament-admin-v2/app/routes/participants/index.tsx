@@ -8,7 +8,7 @@ import { verifyCookie } from "~/utils";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
+    { title: "Participants View" },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
@@ -41,9 +41,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   console.log(params);
 
-  const res = await axios.get(`${process.env.API_URL}/participants/all`, {
-    headers: { Authorization: `Bearer ${cookie.token}` },
-  });
+  const res = await axios.get(
+    `${process.env.API_URL}/participants/all?${params}`,
+    {
+      headers: { Authorization: `Bearer ${cookie.token}` },
+    }
+  );
 
   return json(res.data);
 };
@@ -57,10 +60,6 @@ export default function Index() {
     denied: true,
   });
   const submit = useSubmit();
-
-  useEffect(() => {
-    console.log(state);
-  });
 
   const sampleRows = [
     { id: 1, name: "John Doe", status: "Verified", date: "June 1, 2021" },
@@ -120,7 +119,7 @@ export default function Index() {
       <PageTitle>Participants</PageTitle>
       <Form
         onChange={(e) => {
-          submit(e.currentTarget);
+          submit(e.currentTarget, { replace: true });
         }}
       >
         <div className="flex justify-end space-x-2">
