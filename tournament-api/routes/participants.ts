@@ -449,6 +449,20 @@ export const participantRoutes = (app: Express) => {
       verificationFilters.push(VerificationStatus.DENIED);
     }
 
+    const shouldFilter = verificationFilters.length > 0;
+
+    const whereQuery = shouldFilter
+      ? {
+          where: {
+            Verification: {
+              status: {
+                in: verificationFilters,
+              },
+            },
+          },
+        }
+      : null;
+
     const participants = await prisma.participant.findMany({
       select: {
         id: true,
@@ -456,13 +470,7 @@ export const participantRoutes = (app: Express) => {
         Verification: { select: { status: true } },
         updatedAt: true,
       },
-      where: {
-        Verification: {
-          status: {
-            in: verificationFilters,
-          },
-        },
-      },
+      ...whereQuery,
     });
     res.status(200).json(participants);
   });
