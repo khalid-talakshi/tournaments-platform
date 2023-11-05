@@ -14,11 +14,11 @@ export const RegisterPage = () => {
   const { setCookie, getCookie } = useCookie("token");
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (getCookie() !== null) {
-  //     navigate("/dashboard");
-  //   }
-  // }, [getCookie, navigate]);
+  useEffect(() => {
+    if (getCookie() !== null) {
+      navigate("/dashboard");
+    }
+  }, [getCookie, navigate]);
 
   useEffect(() => {
     if (password !== confirmPassword) {
