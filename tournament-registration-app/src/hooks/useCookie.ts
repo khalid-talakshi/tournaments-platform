@@ -14,7 +14,7 @@ export const useCookie = (name: string, timeToExpire?: number) => {
     return cookie ? cookie.split("=")[1] : null;
   };
 
-  const ignoreRedirectPaths = ["/login", "/register"];
+  const ignoreRedirectPaths = ["/login", "/register", "/register/"];
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookie, _] = useState(getCookie());
@@ -29,9 +29,6 @@ export const useCookie = (name: string, timeToExpire?: number) => {
   };
 
   useEffect(() => {
-    console.log("cookie", getCookie());
-    console.log("location", location.pathname);
-
     if (
       getCookie() === null &&
       !ignoreRedirectPaths.includes(location.pathname)
