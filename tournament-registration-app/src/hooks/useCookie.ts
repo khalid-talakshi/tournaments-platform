@@ -29,6 +29,9 @@ export const useCookie = (name: string, timeToExpire?: number) => {
   };
 
   useEffect(() => {
+    console.log("cookie", getCookie());
+    console.log("location", location.pathname);
+
     if (
       getCookie() === null &&
       !ignoreRedirectPaths.includes(location.pathname)
