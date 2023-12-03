@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { AiFillCloseCircle } from "react-icons/ai";
+import { AiFillCloseCircle } from "react-icons/ai/index.js";
 
 export interface Props {
   showModal: boolean;
