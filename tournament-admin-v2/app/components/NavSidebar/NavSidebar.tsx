@@ -1,5 +1,9 @@
 import * as Navbar from "@radix-ui/react-navigation-menu";
-import { AiFillHome, AiOutlineTeam } from "react-icons/ai/index.js";
+import {
+  AiFillHome,
+  AiFillIdcard,
+  AiOutlineTeam,
+} from "react-icons/ai/index.js";
 import { Link, useLocation } from "@remix-run/react";
 import logo from "~/assets/gc-logo.png";
 
@@ -14,6 +18,11 @@ export const NavSidebar = () => {
       text: "Participants",
       icon: <AiOutlineTeam />,
       to: "/participants",
+    },
+    {
+      text: "Categories",
+      icon: <AiFillIdcard />,
+      to: "/categories",
     },
   ];
 

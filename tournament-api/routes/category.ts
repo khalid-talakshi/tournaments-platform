@@ -15,10 +15,17 @@ export const categoryRoutes = (app: Express) => {
           where: {
             female: female === "true" ? true : false,
           },
+          include: {
+            Teams: true,
+          },
         });
         res.status(200).json(categories);
       } else {
-        const categories = await prisma.category.findMany();
+        const categories = await prisma.category.findMany({
+          include: {
+            Teams: true,
+          },
+        });
         res.status(200).json(categories);
       }
     } catch (e) {

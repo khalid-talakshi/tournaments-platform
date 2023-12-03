@@ -74,7 +74,7 @@ model Player {
   jerseyNumber  Int         @default(0)
   participantId Int         @db.Integer
   Team          Team?       @relation(fields: [teamId], references: [id], map: "Players_ibfk_1", onDelete: Cascade)
-  Participant   Participant @relation(fields: [participantId], references: [id], map: "Players_ibfk_2")
+  Participant   Participant @relation(fields: [participantId], references: [id], map: "Players_ibfk_2", onDelete: Cascade)
 
   @@unique([participantId, teamId], name: "ParticipantId_TeamId")
   @@unique([jerseyNumber, teamId], name: "jerseyNumber_teamId")

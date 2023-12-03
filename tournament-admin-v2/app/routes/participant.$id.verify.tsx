@@ -42,7 +42,8 @@ const verificationSteps = [
 export default function Index() {
   const { verification } = useOutletContext<{ verification: any }>();
 
-  const reasonsList = verification.reason.split(",");
+  const reasonsList =
+    verification.reason !== null ? verification.reason.split(",") : [];
 
   return (
     <>
