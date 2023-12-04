@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { LoaderFunction, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import axios from "axios";
 import { useState } from "react";
 import { AiFillPlusSquare } from "react-icons/ai/index.js";
@@ -19,8 +19,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Index() {
   const loaderData = useLoaderData<any[]>();
   const [showAddModal, setShowAddModal] = useState(false);
-
-  console.log(loaderData);
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-4">
@@ -28,17 +27,27 @@ export default function Index() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {loaderData.map((category) => {
           return (
-            <Card>
+            <Card key={category.id}>
               <h2 className="text-xl">{category.name}</h2>
               <p>Code: {category.code}</p>
               <p>Number of Teams: {category.Teams.length}</p>
               <div className="flex space-x-1">
-                <button className="bg-blue-900 px-2 py-1 rounded-md hover:bg-blue-950 transition-colors ease-in-out">
+                <button
+                  className="bg-blue-900 px-2 py-1 rounded-md hover:bg-blue-950 transition-colors ease-in-out"
+                  onClick={() => {
+                    navigate(`/category/${category.id}`);
+                  }}
+                >
                   View
                 </button>
-                <button className="bg-red-900 px-2 py-1 rounded-md hover:bg-red-950 transition-colors ease-in-out">
-                  Delete
-                </button>
+                <Form method="delete" action={`/category/${category.id}`}>
+                  <button
+                    className="bg-red-900 px-2 py-1 rounded-md hover:bg-red-950 transition-colors ease-in-out"
+                    type="submit"
+                  >
+                    Delete
+                  </button>
+                </Form>
               </div>
             </Card>
           );
@@ -56,7 +65,11 @@ export default function Index() {
         setShowModal={setShowAddModal}
         title="Add New Category"
       >
-        <form className="flex flex-col space-y-2">
+        <Form
+          className="flex flex-col space-y-2"
+          method="post"
+          action="/category/create"
+        >
           <div className="flex space-x-2">
             <div className="flex flex-col space-y-2">
               <label htmlFor="name">Name</label>
@@ -114,7 +127,7 @@ export default function Index() {
               </button>
             </Dialog.Close>
           </div>
-        </form>
+        </Form>
       </Modal>
     </div>
   );

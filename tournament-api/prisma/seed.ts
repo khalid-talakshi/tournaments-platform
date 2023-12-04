@@ -73,26 +73,26 @@ const main = async () => {
     console.log("user already exists");
   }
 
-  console.log("Seeding Categories");
+  // console.log("Seeding Categories");
 
-  for (const category of categories) {
-    const categoryEntry = await prisma.category.findFirst({
-      where: {
-        code: category.code,
-      },
-    });
+  // for (const category of categories) {
+  //   const categoryEntry = await prisma.category.findFirst({
+  //     where: {
+  //       code: category.code,
+  //     },
+  //   });
 
-    if (categoryEntry) {
-      console.log("category already exists", categoryEntry);
-      continue;
-    } else {
-      const newCategory = await prisma.category.create({
-        data: category,
-      });
+  //   if (categoryEntry) {
+  //     console.log("category already exists", categoryEntry);
+  //     continue;
+  //   } else {
+  //     const newCategory = await prisma.category.create({
+  //       data: category,
+  //     });
 
-      console.log("seeded category", newCategory);
-    }
-  }
+  //     console.log("seeded category", newCategory);
+  //   }
+  // }
 };
 
 main()
